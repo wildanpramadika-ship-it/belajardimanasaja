@@ -2,6 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>E-Learning & CBT System</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -71,22 +72,22 @@
 
   <!-- LOGIN CONTAINER -->
   <div id="loginSection" class="flex items-center justify-center min-h-screen p-4">
-    <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md border border-gray-100">
+    <div class="bg-white p-6 sm:p-8 rounded-xl shadow-lg w-full max-w-md border border-gray-100">
       <div class="text-center mb-6">
-        <i class="fa-solid fa-graduation-cap text-5xl text-indigo-600 mb-2"></i>
-        <h2 class="text-2xl font-bold text-gray-800">E-Learning & CBT</h2>
-        <p class="text-sm text-gray-500">SD Negeri Harjosari Kidul 01</p>
+        <i class="fa-solid fa-graduation-cap text-4xl sm:text-5xl text-indigo-600 mb-2"></i>
+        <h2 class="text-xl sm:text-2xl font-bold text-gray-800">E-Learning & CBT</h2>
+        <p class="text-xs sm:text-sm text-gray-500">SD Negeri Harjosari Kidul 01</p>
       </div>
       <form id="loginForm" onsubmit="handleLogin(event)" autocomplete="off" class="space-y-4">
         <div>
           <label class="block text-sm font-medium text-gray-700">Username</label>
-          <input type="text" id="loginUser" required class="mt-1 block w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          <input type="text" id="loginUser" required class="mt-1 block w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none text-sm sm:text-base">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700">Password</label>
-          <input type="password" id="loginPass" required class="mt-1 block w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          <input type="password" id="loginPass" required class="mt-1 block w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none text-sm sm:text-base">
         </div>
-        <button type="submit" id="btnLogin" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 rounded-lg transition shadow-md">
+        <button type="submit" id="btnLogin" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 rounded-lg transition shadow-md text-sm sm:text-base">
           Masuk
         </button>
       </form>
@@ -103,16 +104,16 @@
     <!-- NAVBAR -->
     <header class="bg-indigo-700 text-white shadow-md">
       <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-        <div class="flex items-center space-x-3">
-          <i class="fa-solid fa-graduation-cap text-2xl"></i>
-          <span class="font-bold text-lg">E-Learning & CBT System</span>
+        <div class="flex items-center space-x-2 sm:space-x-3">
+          <i class="fa-solid fa-graduation-cap text-xl sm:text-2xl"></i>
+          <span class="font-bold text-sm sm:text-lg">E-Learning & CBT</span>
         </div>
-        <div class="flex items-center space-x-4">
+        <div class="flex items-center space-x-2 sm:space-x-4">
           <div class="text-right">
-            <span id="navNama" class="block font-semibold"></span>
-            <span id="navRole" class="text-xs bg-indigo-900 px-2 py-0.5 rounded uppercase"></span>
+            <span id="navNama" class="block font-semibold text-xs sm:text-sm"></span>
+            <span id="navRole" class="text-[10px] sm:text-xs bg-indigo-900 px-2 py-0.5 rounded uppercase"></span>
           </div>
-          <button onclick="logout()" class="bg-red-500 hover:bg-red-600 px-3 py-1.5 rounded text-sm font-medium transition">
+          <button onclick="logout()" class="bg-red-500 hover:bg-red-600 px-2.5 py-1.5 rounded text-xs sm:text-sm font-medium transition">
             <i class="fa-solid fa-sign-out-alt mr-1"></i> Keluar
           </button>
         </div>
@@ -124,7 +125,7 @@
       
       <!-- ADMIN VIEW -->
       <div id="adminView" class="hidden space-y-6">
-        <h2 class="text-xl font-bold text-gray-800">Panel Administrasi User</h2>
+        <h2 class="text-lg sm:text-xl font-bold text-gray-800">Panel Administrasi User</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div class="bg-white p-5 rounded-lg shadow">
             <h3 class="font-semibold text-lg mb-4">Tambah Pengguna Baru</h3>
@@ -138,7 +139,7 @@
                 <option value="admin">Admin</option>
               </select>
               <input type="text" id="addUserKelas" placeholder="Kelas (contoh: 6A / Sesi 1)" required class="w-full border rounded p-2 text-sm">
-              <button type="submit" class="w-full bg-emerald-600 text-white py-2 rounded font-medium hover:bg-emerald-700">Simpan User</button>
+              <button type="submit" class="w-full bg-emerald-600 text-white py-2 rounded font-medium hover:bg-emerald-700 text-sm">Simpan User</button>
             </form>
           </div>
           <div class="bg-white p-5 rounded-lg shadow md:col-span-2">
@@ -163,16 +164,16 @@
 
       <!-- GURU VIEW -->
       <div id="guruView" class="hidden space-y-6">
-        <div class="flex border-b border-gray-200">
-          <button onclick="switchGuruTab('materi')" id="btnTabMateri" class="py-2.5 px-5 font-semibold border-b-2 border-indigo-600 text-indigo-600">Kelola Materi</button>
-          <button onclick="switchGuruTab('cbt')" id="btnTabCBT" class="py-2.5 px-5 font-semibold text-gray-500 hover:text-indigo-600">Kelola CBT & Soal</button>
-          <button onclick="switchGuruTab('nilai')" id="btnTabNilai" class="py-2.5 px-5 font-semibold text-gray-500 hover:text-indigo-600">Rekap Nilai & Anti-Contek</button>
+        <div class="flex border-b border-gray-200 overflow-x-auto text-sm">
+          <button onclick="switchGuruTab('materi')" id="btnTabMateri" class="py-2.5 px-4 font-semibold border-b-2 border-indigo-600 text-indigo-600 whitespace-nowrap">Kelola Materi</button>
+          <button onclick="switchGuruTab('cbt')" id="btnTabCBT" class="py-2.5 px-4 font-semibold text-gray-500 hover:text-indigo-600 whitespace-nowrap">Kelola CBT & Soal</button>
+          <button onclick="switchGuruTab('nilai')" id="btnTabNilai" class="py-2.5 px-4 font-semibold text-gray-500 hover:text-indigo-600 whitespace-nowrap">Rekap Nilai</button>
         </div>
 
         <!-- Tab 1: Kelola Materi -->
         <div id="guruMateriContent" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          <div class="bg-white p-6 rounded-xl shadow border border-gray-100 lg:col-span-5">
-            <h3 id="formMateriTitle" class="font-bold text-lg mb-4 text-indigo-700 flex items-center">
+          <div class="bg-white p-5 rounded-xl shadow border border-gray-100 lg:col-span-5">
+            <h3 id="formMateriTitle" class="font-bold text-base sm:text-lg mb-4 text-indigo-700 flex items-center">
               <i class="fa-solid fa-pen-to-square mr-2"></i> Unggah / Edit Materi
             </h3>
             <form onsubmit="handleSaveMateri(event)" class="space-y-4">
@@ -195,16 +196,16 @@
               <div>
                 <label class="block text-xs font-semibold text-gray-700 mb-1">Isi Penjelasan Materi & Link Video</label>
                 <div class="flex flex-wrap gap-1.5 mb-1.5 p-1 bg-gray-50 border rounded-lg">
-                  <button type="button" onclick="applyTextFormat('b')" class="px-2.5 py-1 bg-white hover:bg-indigo-50 border rounded font-bold text-xs shadow-sm text-gray-700 hover:text-indigo-600"><i class="fa-solid fa-bold"></i></button>
-                  <button type="button" onclick="applyTextFormat('i')" class="px-2.5 py-1 bg-white hover:bg-indigo-50 border rounded italic text-xs shadow-sm text-gray-700 hover:text-indigo-600"><i class="fa-solid fa-italic"></i></button>
-                  <button type="button" onclick="applyTextFormat('u')" class="px-2.5 py-1 bg-white hover:bg-indigo-50 border rounded underline text-xs shadow-sm text-gray-700 hover:text-indigo-600"><i class="fa-solid fa-underline"></i></button>
+                  <button type="button" onclick="applyTextFormat('b')" class="px-2 py-1 bg-white border rounded font-bold text-xs text-gray-700"><i class="fa-solid fa-bold"></i></button>
+                  <button type="button" onclick="applyTextFormat('i')" class="px-2 py-1 bg-white border rounded italic text-xs text-gray-700"><i class="fa-solid fa-italic"></i></button>
+                  <button type="button" onclick="applyTextFormat('u')" class="px-2 py-1 bg-white border rounded underline text-xs text-gray-700"><i class="fa-solid fa-underline"></i></button>
                   <span class="border-r my-1"></span>
-                  <button type="button" onclick="insertImageToContent()" class="px-2.5 py-1 bg-white hover:bg-indigo-50 border rounded text-xs shadow-sm text-gray-700 hover:text-indigo-600 font-semibold"><i class="fa-solid fa-image text-emerald-600"></i> Gambar</button>
-                  <button type="button" onclick="insertTableToContent()" class="px-2.5 py-1 bg-white hover:bg-indigo-50 border rounded text-xs shadow-sm text-gray-700 hover:text-indigo-600 font-semibold"><i class="fa-solid fa-table text-blue-600"></i> Tabel</button>
-                  <button type="button" onclick="insertMathTemplate()" class="px-2.5 py-1 bg-white hover:bg-indigo-50 border rounded text-xs shadow-sm text-gray-700 hover:text-indigo-600 font-semibold"><i class="fa-solid fa-square-root-variable text-purple-600"></i> Pecahan</button>
+                  <button type="button" onclick="insertImageToContent()" class="px-2 py-1 bg-white border rounded text-xs text-gray-700 font-semibold"><i class="fa-solid fa-image text-emerald-600"></i> Gambar</button>
+                  <button type="button" onclick="insertTableToContent()" class="px-2 py-1 bg-white border rounded text-xs text-gray-700 font-semibold"><i class="fa-solid fa-table text-blue-600"></i> Tabel</button>
+                  <button type="button" onclick="insertMathTemplate()" class="px-2 py-1 bg-white border rounded text-xs text-gray-700 font-semibold"><i class="fa-solid fa-square-root-variable text-purple-600"></i> Pecahan</button>
                 </div>
 
-                <textarea id="matKonten" placeholder="Tuliskan penjelasan materi di sini..." rows="12" required class="w-full border rounded-lg p-3 text-sm focus:ring-2 focus:ring-indigo-500 leading-relaxed"></textarea>
+                <textarea id="matKonten" placeholder="Tuliskan penjelasan materi di sini..." rows="10" required class="w-full border rounded-lg p-3 text-sm focus:ring-2 focus:ring-indigo-500 leading-relaxed"></textarea>
               </div>
 
               <div>
@@ -222,22 +223,22 @@
               </div>
               
               <div class="flex space-x-2 pt-2">
-                <button type="submit" id="btnSubmitMateri" class="flex-1 bg-indigo-600 text-white py-2.5 rounded-lg font-semibold hover:bg-indigo-700 transition shadow">Simpan Materi</button>
+                <button type="submit" id="btnSubmitMateri" class="flex-1 bg-indigo-600 text-white py-2.5 rounded-lg font-semibold hover:bg-indigo-700 transition shadow text-sm">Simpan Materi</button>
                 <button type="button" onclick="resetMateriForm()" class="bg-gray-200 text-gray-700 px-4 rounded-lg text-sm hover:bg-gray-300 font-medium">Batal</button>
               </div>
             </form>
           </div>
 
-          <div class="bg-white p-6 rounded-xl shadow border border-gray-100 lg:col-span-7">
-            <h3 class="font-bold text-lg mb-4 text-gray-800">Daftar Materi Pembelajaran</h3>
+          <div class="bg-white p-5 rounded-xl shadow border border-gray-100 lg:col-span-7">
+            <h3 class="font-bold text-base sm:text-lg mb-4 text-gray-800">Daftar Materi Pembelajaran</h3>
             <div id="guruMateriList" class="space-y-4 max-h-[80vh] overflow-y-auto pr-1"></div>
           </div>
         </div>
 
         <!-- Tab 2: CBT Builder -->
         <div id="guruCBTContent" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
-          <div class="bg-white p-6 rounded-xl shadow border border-gray-100 lg:col-span-6">
-            <h3 id="formUjianTitle" class="font-bold text-lg mb-4 text-indigo-700 flex items-center">
+          <div class="bg-white p-5 rounded-xl shadow border border-gray-100 lg:col-span-6">
+            <h3 id="formUjianTitle" class="font-bold text-base sm:text-lg mb-4 text-indigo-700 flex items-center">
               <i class="fa-solid fa-file-pen mr-2"></i> Pengaturan Ujian CBT
             </h3>
             <form onsubmit="handleAddUjian(event)" class="space-y-4">
@@ -247,18 +248,18 @@
                 <input type="text" id="examJudul" placeholder="Sumatif Akhir Bab 1..." required class="w-full border rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500">
               </div>
 
-              <div class="grid grid-cols-3 gap-3">
+              <div class="grid grid-cols-3 gap-2 sm:gap-3">
                 <div>
-                  <label class="block text-xs font-semibold text-gray-700 mb-1">Mapel</label>
-                  <input type="text" id="examMapel" placeholder="Matematika" required class="w-full border rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500">
+                  <label class="block text-[11px] sm:text-xs font-semibold text-gray-700 mb-1">Mapel</label>
+                  <input type="text" id="examMapel" placeholder="Matematika" required class="w-full border rounded-lg p-2 text-xs sm:text-sm">
                 </div>
                 <div>
-                  <label class="block text-xs font-semibold text-gray-700 mb-1">Target Kelas</label>
-                  <input type="text" id="examKelas" placeholder="6A" required class="w-full border rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500">
+                  <label class="block text-[11px] sm:text-xs font-semibold text-gray-700 mb-1">Target Kelas</label>
+                  <input type="text" id="examKelas" placeholder="6A" required class="w-full border rounded-lg p-2 text-xs sm:text-sm">
                 </div>
                 <div>
-                  <label class="block text-xs font-semibold text-gray-700 mb-1">Durasi (Menit)</label>
-                  <input type="number" id="examDurasi" placeholder="60" required class="w-full border rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500">
+                  <label class="block text-[11px] sm:text-xs font-semibold text-gray-700 mb-1">Durasi (Menit)</label>
+                  <input type="number" id="examDurasi" placeholder="60" required class="w-full border rounded-lg p-2 text-xs sm:text-sm">
                 </div>
               </div>
 
@@ -270,23 +271,23 @@
                     <input type="text" id="examSesi" placeholder="Semua / Sesi 1 / Sesi 2" value="Semua" required class="w-full border rounded p-2 text-xs">
                   </div>
                   <div>
-                    <label class="block text-[11px] font-semibold text-gray-700 mb-1">Batas Percobaan Pengerjaan</label>
+                    <label class="block text-[11px] font-semibold text-gray-700 mb-1">Batas Percobaan</label>
                     <select id="examMaxAttempts" class="w-full border rounded p-2 text-xs bg-white font-semibold">
                       <option value="1">Maksimal 1 Kali</option>
                       <option value="2">Maksimal 2 Kali</option>
                       <option value="3">Maksimal 3 Kali</option>
-                      <option value="0">Tanpa Batas (Bebas Ulang)</option>
+                      <option value="0">Tanpa Batas</option>
                     </select>
                   </div>
                 </div>
-                <div class="flex items-center gap-4 pt-1">
+                <div class="flex flex-wrap items-center gap-3 pt-1">
                   <label class="inline-flex items-center text-xs font-semibold text-gray-700 cursor-pointer">
                     <input type="checkbox" id="examAcakSoal" checked class="w-4 h-4 text-indigo-600 rounded">
-                    <span class="ml-1.5">Acak Urutan Soal</span>
+                    <span class="ml-1.5">Acak Soal</span>
                   </label>
                   <label class="inline-flex items-center text-xs font-semibold text-gray-700 cursor-pointer">
                     <input type="checkbox" id="examAcakOpsi" checked class="w-4 h-4 text-indigo-600 rounded">
-                    <span class="ml-1.5">Acak Opsi Pilihan Ganda</span>
+                    <span class="ml-1.5">Acak Opsi PG</span>
                   </label>
                 </div>
               </div>
@@ -295,42 +296,42 @@
                 <div class="flex justify-between items-center mb-3">
                   <h4 class="font-bold text-sm text-gray-800">Bank Soal Ujian</h4>
                   <button type="button" onclick="addQuestionField()" class="text-xs bg-indigo-50 text-indigo-600 px-3 py-1.5 rounded-lg border border-indigo-200 hover:bg-indigo-100 font-bold">
-                    <i class="fa-solid fa-plus mr-1"></i> Tambah Soal Baru
+                    <i class="fa-solid fa-plus mr-1"></i> Tambah Soal
                   </button>
                 </div>
-                <div id="soalContainer" class="space-y-5 max-h-[60vh] overflow-y-auto pr-1"></div>
+                <div id="soalContainer" class="space-y-4 max-h-[60vh] overflow-y-auto pr-1"></div>
               </div>
 
               <div class="flex space-x-2 pt-2">
-                <button type="submit" id="btnSubmitUjian" class="flex-1 bg-indigo-600 text-white py-3 rounded-lg font-bold hover:bg-indigo-700 transition shadow-md">Terbitkan Ujian CBT</button>
+                <button type="submit" id="btnSubmitUjian" class="flex-1 bg-indigo-600 text-white py-2.5 rounded-lg font-bold hover:bg-indigo-700 transition shadow-md text-sm">Terbitkan Ujian CBT</button>
                 <button type="button" id="btnCancelUjian" onclick="resetUjianForm()" class="hidden bg-gray-200 text-gray-700 px-4 rounded-lg text-sm hover:bg-gray-300 font-medium">Batal</button>
               </div>
             </form>
           </div>
 
-          <div class="bg-white p-6 rounded-xl shadow border border-gray-100 lg:col-span-6">
-            <h3 class="font-bold text-lg mb-4 text-gray-800">Daftar Ujian Aktif & Status Access</h3>
+          <div class="bg-white p-5 rounded-xl shadow border border-gray-100 lg:col-span-6">
+            <h3 class="font-bold text-base sm:text-lg mb-4 text-gray-800">Daftar Ujian Aktif</h3>
             <div id="guruUjianList" class="space-y-3 max-h-[80vh] overflow-y-auto pr-1"></div>
           </div>
         </div>
 
         <!-- Tab 3: Rekap Nilai -->
-        <div id="guruNilaiContent" class="hidden bg-white p-6 rounded-xl shadow space-y-4 border border-gray-100">
+        <div id="guruNilaiContent" class="hidden bg-white p-5 rounded-xl shadow space-y-4 border border-gray-100">
           <div class="flex justify-between items-center">
-            <h3 class="font-bold text-lg text-gray-800">Rekap Hasil Ujian & Catatan Kecurangan</h3>
-            <button onclick="loadRekapNilai()" class="text-sm bg-gray-100 px-3 py-1.5 rounded-lg hover:bg-gray-200 font-medium"><i class="fa-solid fa-rotate-right mr-1"></i> Refresh</button>
+            <h3 class="font-bold text-base sm:text-lg text-gray-800">Rekap Hasil Ujian</h3>
+            <button onclick="loadRekapNilai()" class="text-xs sm:text-sm bg-gray-100 px-3 py-1.5 rounded-lg hover:bg-gray-200 font-medium"><i class="fa-solid fa-rotate-right mr-1"></i> Refresh</button>
           </div>
           <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left border">
+            <table class="w-full text-xs sm:text-sm text-left border">
               <thead class="bg-gray-100 border-b">
                 <tr>
-                  <th class="p-3">Waktu</th>
-                  <th class="p-3">Nama Murid</th>
-                  <th class="p-3">Kelas</th>
-                  <th class="p-3">Judul Ujian</th>
-                  <th class="p-3">Nilai Akhir</th>
-                  <th class="p-3">Pelanggaran</th>
-                  <th class="p-3">Aksi</th>
+                  <th class="p-2 sm:p-3">Waktu</th>
+                  <th class="p-2 sm:p-3">Nama</th>
+                  <th class="p-2 sm:p-3">Kelas</th>
+                  <th class="p-2 sm:p-3">Ujian</th>
+                  <th class="p-2 sm:p-3">Nilai</th>
+                  <th class="p-2 sm:p-3">Pelanggaran</th>
+                  <th class="p-2 sm:p-3">Aksi</th>
                 </tr>
               </thead>
               <tbody id="rekapNilaiBody"></tbody>
@@ -341,38 +342,38 @@
 
       <!-- MURID VIEW -->
       <div id="muridView" class="hidden space-y-6">
-        <div class="flex border-b border-gray-200">
-          <button onclick="switchMuridTab('materi')" id="btnMuridMateri" class="py-2.5 px-5 font-semibold border-b-2 border-indigo-600 text-indigo-600">Materi Belajar</button>
-          <button onclick="switchMuridTab('cbt')" id="btnMuridCBT" class="py-2.5 px-5 font-semibold text-gray-500 hover:text-indigo-600">Daftar Ujian CBT</button>
+        <div class="flex border-b border-gray-200 text-sm">
+          <button onclick="switchMuridTab('materi')" id="btnMuridMateri" class="py-2.5 px-4 font-semibold border-b-2 border-indigo-600 text-indigo-600">Materi Belajar</button>
+          <button onclick="switchMuridTab('cbt')" id="btnMuridCBT" class="py-2.5 px-4 font-semibold text-gray-500 hover:text-indigo-600">Daftar Ujian CBT</button>
         </div>
 
         <div id="muridMateriContent" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
 
         <div id="muridCBTContent" class="hidden space-y-4">
-          <div id="ujianAvailableList" class="grid grid-cols-1 md:grid-cols-3 gap-5"></div>
+          <div id="ujianAvailableList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-5"></div>
         </div>
 
-        <div id="cbtExamArea" class="hidden bg-white p-6 rounded-xl shadow border border-indigo-100 relative">
-          <div id="cheatWarningBanner" class="hidden mb-4 p-3 bg-red-100 border border-red-400 text-red-700 text-sm rounded-lg flex justify-between items-center">
-            <span><i class="fa-solid fa-triangle-exclamation mr-2"></i> Peringatan Anti-Contek! Terdeteksi meninggalkan halaman ujian: <strong id="cheatCountText">0</strong> kali. Poin dikurangi!</span>
+        <div id="cbtExamArea" class="hidden bg-white p-4 sm:p-6 rounded-xl shadow border border-indigo-100 relative">
+          <div id="cheatWarningBanner" class="hidden mb-4 p-3 bg-red-100 border border-red-400 text-red-700 text-xs sm:text-sm rounded-lg flex justify-between items-center">
+            <span><i class="fa-solid fa-triangle-exclamation mr-1.5"></i> Terdeteksi meninggalkan halaman: <strong id="cheatCountText">0</strong> kali.</span>
           </div>
 
-          <div class="flex justify-between items-center border-b pb-4 mb-4">
+          <div class="flex justify-between items-center border-b pb-3 mb-4">
             <div>
-              <h3 id="cbtTitle" class="text-xl font-bold text-gray-800"></h3>
-              <p id="cbtSub" class="text-sm text-gray-500"></p>
+              <h3 id="cbtTitle" class="text-base sm:text-xl font-bold text-gray-800"></h3>
+              <p id="cbtSub" class="text-xs sm:text-sm text-gray-500"></p>
             </div>
             <div class="text-right">
-              <span class="text-xs text-gray-500 block">Sisa Waktu</span>
-              <span id="cbtTimer" class="text-2xl font-mono font-bold text-red-600">00:00</span>
+              <span class="text-[10px] sm:text-xs text-gray-500 block">Sisa Waktu</span>
+              <span id="cbtTimer" class="text-lg sm:text-2xl font-mono font-bold text-red-600">00:00</span>
             </div>
           </div>
           
-          <div id="cbtQuestionsContainer" class="space-y-6 max-h-[68vh] overflow-y-auto pr-2"></div>
+          <div id="cbtQuestionsContainer" class="space-y-6 max-h-[68vh] overflow-y-auto pr-1"></div>
           
           <div class="mt-6 border-t pt-4 flex justify-between items-center">
-            <span class="text-xs text-gray-400"><i class="fa-solid fa-shield-halved text-indigo-500 mr-1"></i> Ujian Terproteksi Acak Soal</span>
-            <button onclick="submitExam(false)" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-6 py-2.5 rounded-lg shadow">
+            <span class="text-[10px] sm:text-xs text-gray-400"><i class="fa-solid fa-shield-halved text-indigo-500 mr-1"></i> Mode Ujian</span>
+            <button onclick="submitExam(false)" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg shadow text-xs sm:text-base">
               Kirim Jawaban <i class="fa-solid fa-paper-plane ml-1"></i>
             </button>
           </div>
@@ -382,10 +383,10 @@
     </main>
   </div>
 
-  <div id="ytModal" class="hidden fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4">
+  <div id="ytModal" class="hidden fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-3 sm:p-4">
     <div class="bg-white rounded-xl overflow-hidden max-w-3xl w-full shadow-2xl">
       <div class="p-3 bg-gray-900 text-white flex justify-between items-center">
-        <span class="font-bold text-sm"><i class="fa-brands fa-youtube text-red-500 mr-2"></i> Pemutar Video Pembelajaran</span>
+        <span class="font-bold text-xs sm:text-sm"><i class="fa-brands fa-youtube text-red-500 mr-2"></i> Pemutar Video</span>
         <button onclick="closeYtModal()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
       </div>
       <div class="aspect-video w-full">
@@ -395,15 +396,15 @@
   </div>
 
   <div id="customModal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-all">
-    <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 text-center border border-gray-100 transform transition-all">
-      <div id="modalIconContainer" class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 bg-indigo-50 text-indigo-600">
-        <i id="modalIcon" class="fa-solid fa-circle-question text-2xl"></i>
+    <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 text-center border border-gray-100">
+      <div id="modalIconContainer" class="w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center mx-auto mb-4 bg-indigo-50 text-indigo-600">
+        <i id="modalIcon" class="fa-solid fa-circle-question text-xl sm:text-2xl"></i>
       </div>
-      <h3 id="modalTitle" class="text-lg font-bold text-gray-800 mb-2">Konfirmasi</h3>
-      <p id="modalMessage" class="text-sm text-gray-600 leading-relaxed mb-6"></p>
+      <h3 id="modalTitle" class="text-base sm:text-lg font-bold text-gray-800 mb-2">Konfirmasi</h3>
+      <p id="modalMessage" class="text-xs sm:text-sm text-gray-600 leading-relaxed mb-6"></p>
       <div id="modalButtons" class="flex justify-center gap-3">
-        <button id="modalBtnCancel" onclick="closeCustomModal(false)" class="hidden flex-1 px-4 py-2.5 rounded-xl border border-gray-300 text-gray-700 font-semibold text-sm hover:bg-gray-50 transition">Batal</button>
-        <button id="modalBtnOk" onclick="closeCustomModal(true)" class="flex-1 px-4 py-2.5 rounded-xl bg-indigo-600 text-white font-semibold text-sm hover:bg-indigo-700 shadow-md transition">OK</button>
+        <button id="modalBtnCancel" onclick="closeCustomModal(false)" class="hidden flex-1 px-4 py-2 rounded-xl border border-gray-300 text-gray-700 font-semibold text-xs sm:text-sm hover:bg-gray-50 transition">Batal</button>
+        <button id="modalBtnOk" onclick="closeCustomModal(true)" class="flex-1 px-4 py-2 rounded-xl bg-indigo-600 text-white font-semibold text-xs sm:text-sm hover:bg-indigo-700 shadow-md transition">OK</button>
       </div>
     </div>
   </div>
@@ -627,17 +628,16 @@
         msgEl.innerText = message;
         btnCancel.classList.add('hidden');
         btnOk.innerText = 'OK';
-        btnOk.className = 'flex-1 px-4 py-2.5 rounded-xl bg-indigo-600 text-white font-semibold text-sm hover:bg-indigo-700 shadow-md transition';
 
         if (type === 'warning' || type === 'error') {
-          iconContainer.className = 'w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 bg-red-50 text-red-600';
-          iconEl.className = 'fa-solid fa-triangle-exclamation text-2xl';
+          iconContainer.className = 'w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center mx-auto mb-4 bg-red-50 text-red-600';
+          iconEl.className = 'fa-solid fa-triangle-exclamation text-xl sm:text-2xl';
         } else if (type === 'success') {
-          iconContainer.className = 'w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 bg-emerald-50 text-emerald-600';
-          iconEl.className = 'fa-solid fa-circle-check text-2xl';
+          iconContainer.className = 'w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center mx-auto mb-4 bg-emerald-50 text-emerald-600';
+          iconEl.className = 'fa-solid fa-circle-check text-xl sm:text-2xl';
         } else {
-          iconContainer.className = 'w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 bg-indigo-50 text-indigo-600';
-          iconEl.className = 'fa-solid fa-circle-info text-2xl';
+          iconContainer.className = 'w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center mx-auto mb-4 bg-indigo-50 text-indigo-600';
+          iconEl.className = 'fa-solid fa-circle-info text-xl sm:text-2xl';
         }
 
         modalCallback = resolve;
@@ -662,13 +662,13 @@
         btnOk.innerText = 'Ya, Lanjutkan';
 
         if (type === 'danger') {
-          iconContainer.className = 'w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 bg-red-50 text-red-600';
-          iconEl.className = 'fa-solid fa-triangle-exclamation text-2xl';
-          btnOk.className = 'flex-1 px-4 py-2.5 rounded-xl bg-red-600 text-white font-semibold text-sm hover:bg-red-700 shadow-md transition';
+          iconContainer.className = 'w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center mx-auto mb-4 bg-red-50 text-red-600';
+          iconEl.className = 'fa-solid fa-triangle-exclamation text-xl sm:text-2xl';
+          btnOk.className = 'flex-1 px-4 py-2 rounded-xl bg-red-600 text-white font-semibold text-xs sm:text-sm hover:bg-red-700 shadow-md transition';
         } else {
-          iconContainer.className = 'w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 bg-indigo-50 text-indigo-600';
-          iconEl.className = 'fa-solid fa-circle-question text-2xl';
-          btnOk.className = 'flex-1 px-4 py-2.5 rounded-xl bg-indigo-600 text-white font-semibold text-sm hover:bg-indigo-700 shadow-md transition';
+          iconContainer.className = 'w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center mx-auto mb-4 bg-indigo-50 text-indigo-600';
+          iconEl.className = 'fa-solid fa-circle-question text-xl sm:text-2xl';
+          btnOk.className = 'flex-1 px-4 py-2 rounded-xl bg-indigo-600 text-white font-semibold text-xs sm:text-sm hover:bg-indigo-700 shadow-md transition';
         }
 
         modalCallback = resolve;
@@ -826,21 +826,21 @@
       localStorage.setItem('elearning_active_tab', 'guru_' + tab);
       ['guruMateriContent', 'guruCBTContent', 'guruNilaiContent'].forEach(id => document.getElementById(id).classList.add('hidden'));
       ['btnTabMateri', 'btnTabCBT', 'btnTabNilai'].forEach(id => {
-        document.getElementById(id).className = 'py-2.5 px-5 font-semibold text-gray-500 hover:text-indigo-600';
+        document.getElementById(id).className = 'py-2.5 px-4 font-semibold text-gray-500 hover:text-indigo-600 whitespace-nowrap';
       });
 
       if(tab === 'materi') {
         document.getElementById('guruMateriContent').classList.remove('hidden');
-        document.getElementById('btnTabMateri').className = 'py-2.5 px-5 font-semibold border-b-2 border-indigo-600 text-indigo-600';
+        document.getElementById('btnTabMateri').className = 'py-2.5 px-4 font-semibold border-b-2 border-indigo-600 text-indigo-600 whitespace-nowrap';
         loadGuruMateri();
       } else if(tab === 'cbt') {
         document.getElementById('guruCBTContent').classList.remove('hidden');
-        document.getElementById('btnTabCBT').className = 'py-2.5 px-5 font-semibold border-b-2 border-indigo-600 text-indigo-600';
+        document.getElementById('btnTabCBT').className = 'py-2.5 px-4 font-semibold border-b-2 border-indigo-600 text-indigo-600 whitespace-nowrap';
         if(document.getElementById('soalContainer').children.length === 0) addQuestionField();
         loadGuruUjian();
       } else if(tab === 'nilai') {
         document.getElementById('guruNilaiContent').classList.remove('hidden');
-        document.getElementById('btnTabNilai').className = 'py-2.5 px-5 font-semibold border-b-2 border-indigo-600 text-indigo-600';
+        document.getElementById('btnTabNilai').className = 'py-2.5 px-4 font-semibold border-b-2 border-indigo-600 text-indigo-600 whitespace-nowrap';
         loadRekapNilai();
       }
     }
@@ -921,11 +921,11 @@
 
     function loadGuruMateri() {
       const container = document.getElementById('guruMateriList');
-      container.innerHTML = '<p class="text-sm text-gray-400">Memuat materi...</p>';
+      container.innerHTML = '<p class="text-xs text-gray-400">Memuat materi...</p>';
 
       google.script.run.withSuccessHandler(list => {
         if(!list || list.length === 0) { 
-          container.innerHTML = '<p class="text-sm text-gray-500">Belum ada materi diterbitkan.</p>'; 
+          container.innerHTML = '<p class="text-xs text-gray-500">Belum ada materi diterbitkan.</p>'; 
           return; 
         }
         container.innerHTML = list.map(m => {
@@ -933,25 +933,25 @@
           const encodedMateri = encodeURIComponent(JSON.stringify(m));
 
           return `
-            <div class="border p-4 rounded-xl bg-white shadow-sm hover:border-indigo-300 space-y-3">
+            <div class="border p-3.5 rounded-xl bg-white shadow-sm hover:border-indigo-300 space-y-3">
               <div class="flex justify-between items-start">
                 <div>
-                  <h4 class="font-bold text-gray-800 text-base">${m.Judul}</h4>
-                  <p class="text-xs text-gray-500">${m.Mapel} • Target: Kelas ${m.Kelas} • Oleh ${m.Nama_Guru}</p>
+                  <h4 class="font-bold text-gray-800 text-sm sm:text-base">${m.Judul}</h4>
+                  <p class="text-[11px] sm:text-xs text-gray-500">${m.Mapel} • Target: Kelas ${m.Kelas} • Oleh ${m.Nama_Guru}</p>
                 </div>
-                <div class="space-x-1">
-                  <button onclick="editMateri('${encodedMateri}')" class="text-indigo-600 hover:text-indigo-800 text-xs font-semibold px-2 py-1 rounded bg-indigo-50"><i class="fa-solid fa-pen"></i> Edit</button>
-                  <button onclick="deleteMateri('${m.ID}')" class="text-red-600 hover:text-red-800 text-xs font-semibold px-2 py-1 rounded bg-red-50"><i class="fa-solid fa-trash"></i> Hapus</button>
+                <div class="space-x-1 whitespace-nowrap">
+                  <button onclick="editMateri('${encodedMateri}')" class="text-indigo-600 hover:text-indigo-800 text-xs font-semibold px-2 py-1 rounded bg-indigo-50"><i class="fa-solid fa-pen"></i></button>
+                  <button onclick="deleteMateri('${m.ID}')" class="text-red-600 hover:text-red-800 text-xs font-semibold px-2 py-1 rounded bg-red-50"><i class="fa-solid fa-trash"></i></button>
                 </div>
               </div>
 
-              ${m.Gambar_URL ? `<div class="my-2"><img src="${m.Gambar_URL}" class="max-h-64 rounded-lg border object-contain w-full bg-gray-50"></div>` : ''}
+              ${m.Gambar_URL ? `<div class="my-2"><img src="${m.Gambar_URL}" class="max-h-56 rounded-lg border object-contain w-full bg-gray-50"></div>` : ''}
 
-              <div class="text-sm text-gray-700 leading-relaxed whitespace-pre-line">${autoLinkText(m.Konten_Link)}</div>
+              <div class="text-xs sm:text-sm text-gray-700 leading-relaxed whitespace-pre-line">${autoLinkText(m.Konten_Link)}</div>
 
-              <div class="flex justify-between items-center text-xs text-gray-500 border-t pt-2">
+              <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 text-xs text-gray-500 border-t pt-2">
                 <span>Sumber: ${m.Sumber || '-'}</span>
-                ${ytId ? `<button onclick="playYoutube('${ytId}')" class="bg-red-600 text-white px-3 py-1 rounded-lg font-medium hover:bg-red-700"><i class="fa-brands fa-youtube mr-1"></i> Putar Video YouTube</button>` : ''}
+                ${ytId ? `<button onclick="playYoutube('${ytId}')" class="bg-red-600 text-white px-3 py-1 rounded-lg font-medium hover:bg-red-700 text-xs"><i class="fa-brands fa-youtube mr-1"></i> Putar Video YouTube</button>` : ''}
               </div>
             </div>
           `;
@@ -964,35 +964,35 @@
       const container = document.getElementById('soalContainer');
       const index = container.children.length;
       const div = document.createElement('div');
-      div.className = "border p-4 rounded-xl bg-gray-50 space-y-4 text-sm border-gray-200 shadow-sm";
+      div.className = "border p-3.5 rounded-xl bg-gray-50 space-y-3 text-xs sm:text-sm border-gray-200 shadow-sm";
       div.innerHTML = `
-        <div class="flex justify-between items-center border-b pb-2">
+        <div class="flex flex-wrap justify-between items-center gap-2 border-b pb-2">
           <span class="font-bold text-xs text-indigo-600">Soal Nomor #${index + 1}</span>
           <div class="flex items-center gap-2">
             <label class="text-xs font-semibold text-gray-600 flex items-center gap-1">
-              Bobot Soal: 
-              <input type="number" class="q-bobot w-16 border rounded p-1 text-xs text-center font-bold bg-white" value="1" min="1" required>
+              Bobot: 
+              <input type="number" class="q-bobot w-14 border rounded p-1 text-xs text-center font-bold bg-white" value="1" min="1" required>
             </label>
-            <select onchange="renderQuestionTypeInput(this, ${index})" class="q-type border rounded-lg p-1.5 text-xs font-semibold bg-white">
-              <option value="pg">Pilihan Ganda (Single Answer)</option>
-              <option value="pgk_mcma">PGK MCMA (Banyak Jawaban Benar)</option>
-              <option value="pgk_kategori">PGK Kategori / Tabel Pernyataan</option>
+            <select onchange="renderQuestionTypeInput(this, ${index})" class="q-type border rounded-lg p-1 text-xs font-semibold bg-white">
+              <option value="pg">PG (Single Answer)</option>
+              <option value="pgk_mcma">PGK MCMA (Banyak Jawaban)</option>
+              <option value="pgk_kategori">PGK Kategori / Tabel</option>
             </select>
           </div>
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-gray-700 mb-1">Teks Pertanyaan / Narasi Bacaan / Rumus Math ($ \\frac{1}{2} $)</label>
-          <textarea class="q-text w-full border rounded-lg p-2.5 text-xs focus:ring-2 focus:ring-indigo-500 leading-relaxed" placeholder="Tuliskan pertanyaan di sini..." rows="4" required></textarea>
+          <label class="block text-xs font-semibold text-gray-700 mb-1">Teks Pertanyaan / Rumus Math ($ \\frac{1}{2} $)</label>
+          <textarea class="q-text w-full border rounded-lg p-2.5 text-xs focus:ring-2 focus:ring-indigo-500 leading-relaxed" placeholder="Tuliskan pertanyaan di sini..." rows="3" required></textarea>
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-gray-700 mb-1">Gambar Soal (Upload dari PC / Laptop atau URL)</label>
+          <label class="block text-xs font-semibold text-gray-700 mb-1">Gambar Soal (Upload / URL)</label>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <input type="file" accept="image/*" onchange="previewQuestionImage(this, ${index})" class="q-img-file border rounded-lg p-1 text-xs bg-white">
-            <input type="url" class="q-img-url border rounded-lg p-2 text-xs focus:ring-2 focus:ring-indigo-500" placeholder="Atau paste URL Gambar (https...)">
+            <input type="url" class="q-img-url border rounded-lg p-2 text-xs focus:ring-2 focus:ring-indigo-500" placeholder="Atau paste URL Gambar">
           </div>
-          <img id="q_img_preview_${index}" src="" class="hidden max-h-40 rounded-lg border object-contain bg-white p-1 mt-2 shadow-sm">
+          <img id="q_img_preview_${index}" src="" class="hidden max-h-36 rounded-lg border object-contain bg-white p-1 mt-2 shadow-sm">
         </div>
 
         <div class="q-options-container" id="q_opt_${index}"></div>
@@ -1009,16 +1009,16 @@
         container.innerHTML = `
           <div class="space-y-2">
             <label class="block text-xs font-semibold text-gray-700">Daftar Pilihan Jawaban:</label>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-2">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mb-2">
               ${['a', 'b', 'c', 'd'].map(opt => `
-                <div class="border p-2.5 rounded-lg bg-white space-y-1.5 border-gray-200">
+                <div class="border p-2 rounded-lg bg-white space-y-1 border-gray-200">
                   <div class="font-bold text-xs text-indigo-700 uppercase">Opsi ${opt}</div>
                   <input type="text" class="q-${opt} w-full border rounded p-1.5 text-xs" placeholder="Teks Opsi ${opt.toUpperCase()}">
                   <div>
-                    <label class="text-[11px] text-gray-500 font-semibold block mb-0.5">Gambar Opsi ${opt.toUpperCase()}:</label>
-                    <input type="file" accept="image/*" onchange="previewOptImage(this, 'prev_q_${opt}_${index}')" class="q-${opt}-img-file text-[11px] border rounded p-1 w-full bg-gray-50">
+                    <label class="text-[10px] text-gray-500 font-semibold block">Gambar Opsi ${opt.toUpperCase()}:</label>
+                    <input type="file" accept="image/*" onchange="previewOptImage(this, 'prev_q_${opt}_${index}')" class="q-${opt}-img-file text-[10px] border rounded p-1 w-full bg-gray-50">
                   </div>
-                  <img id="prev_q_${opt}_${index}" src="" class="hidden max-h-24 rounded border object-contain bg-gray-50 p-1 mt-1">
+                  <img id="prev_q_${opt}_${index}" src="" class="hidden max-h-20 rounded border object-contain bg-gray-50 p-1 mt-1">
                 </div>
               `).join('')}
             </div>
@@ -1045,13 +1045,13 @@
       } else if(type === 'pgk_kategori') {
         container.innerHTML = `
           <div class="space-y-3">
-            <div class="grid grid-cols-2 gap-2 bg-blue-50 p-2.5 rounded-lg border border-blue-200">
+            <div class="grid grid-cols-2 gap-2 bg-blue-50 p-2 rounded-lg border border-blue-200">
               <div>
-                <label class="text-[11px] font-bold text-blue-900 block mb-1">Nama Kolom Kategori 1</label>
+                <label class="text-[10px] font-bold text-blue-900 block mb-1">Nama Kolom Kategori 1</label>
                 <input type="text" class="q-col1 w-full border rounded p-1.5 text-xs" value="Sebelum" placeholder="misal: Benar" required>
               </div>
               <div>
-                <label class="text-[11px] font-bold text-blue-900 block mb-1">Nama Kolom Kategori 2</label>
+                <label class="text-[10px] font-bold text-blue-900 block mb-1">Nama Kolom Kategori 2</label>
                 <input type="text" class="q-col2 w-full border rounded p-1.5 text-xs" value="Sesudah" placeholder="misal: Salah" required>
               </div>
             </div>
@@ -1075,18 +1075,18 @@
       const optId = `mcma_${qIndex}_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`;
       
       const div = document.createElement('div');
-      div.className = "border p-2.5 rounded-lg bg-white space-y-2 border-gray-200 shadow-sm";
+      div.className = "border p-2 rounded-lg bg-white space-y-1.5 border-gray-200 shadow-sm";
       div.innerHTML = `
         <div class="flex items-center space-x-2">
           <input type="checkbox" class="mcma-key w-4 h-4 text-indigo-600 rounded cursor-pointer" title="Centang jika kunci jawaban">
-          <input type="text" class="mcma-text flex-1 border rounded p-1.5 text-xs" placeholder="Teks Opsi #${optIndex}">
-          <button type="button" onclick="this.closest('.border').remove()" class="text-red-500 hover:text-red-700 text-xs px-1.5"><i class="fa-solid fa-trash"></i></button>
+          <input type="text" class="mcma-text flex-1 border rounded p-1 text-xs" placeholder="Teks Opsi #${optIndex}">
+          <button type="button" onclick="this.closest('.border').remove()" class="text-red-500 hover:text-red-700 text-xs px-1"><i class="fa-solid fa-trash"></i></button>
         </div>
         <div class="flex items-center gap-2 pl-6">
-          <label class="text-[11px] font-semibold text-gray-500 whitespace-nowrap">Gambar Opsi:</label>
-          <input type="file" accept="image/*" onchange="previewOptImage(this, 'prev_${optId}')" class="mcma-img-file text-[11px] border rounded p-1 flex-1 bg-gray-50">
+          <label class="text-[10px] font-semibold text-gray-500 whitespace-nowrap">Gambar Opsi:</label>
+          <input type="file" accept="image/*" onchange="previewOptImage(this, 'prev_${optId}')" class="mcma-img-file text-[10px] border rounded p-0.5 flex-1 bg-gray-50">
         </div>
-        <img id="prev_${optId}" src="" class="hidden max-h-24 rounded border object-contain bg-gray-50 p-1 mt-1 ml-6">
+        <img id="prev_${optId}" src="" class="hidden max-h-20 rounded border object-contain bg-gray-50 p-1 mt-1 ml-6">
       `;
       mcmaContainer.appendChild(div);
     }
@@ -1098,22 +1098,22 @@
       const rowId = `kat_${qIndex}_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`;
       
       const div = document.createElement('div');
-      div.className = "border p-2.5 rounded-lg bg-white space-y-2 border-gray-200 shadow-sm";
+      div.className = "border p-2 rounded-lg bg-white space-y-1.5 border-gray-200 shadow-sm";
       div.innerHTML = `
         <div class="flex items-center space-x-2">
           <span class="text-xs font-bold text-gray-400">#${rIndex}</span>
-          <input type="text" class="kat-text flex-1 border rounded p-1.5 text-xs" placeholder="Teks Pernyataan #${rIndex}">
-          <select class="kat-key border rounded p-1.5 text-xs font-semibold bg-gray-50">
+          <input type="text" class="kat-text flex-1 border rounded p-1 text-xs" placeholder="Teks Pernyataan #${rIndex}">
+          <select class="kat-key border rounded p-1 text-xs font-semibold bg-gray-50">
             <option value="col1">Kunci: Kolom 1</option>
             <option value="col2">Kunci: Kolom 2</option>
           </select>
-          <button type="button" onclick="this.closest('.border').remove()" class="text-red-500 hover:text-red-700 text-xs px-1.5"><i class="fa-solid fa-trash"></i></button>
+          <button type="button" onclick="this.closest('.border').remove()" class="text-red-500 hover:text-red-700 text-xs px-1"><i class="fa-solid fa-trash"></i></button>
         </div>
         <div class="flex items-center gap-2 pl-6">
-          <label class="text-[11px] font-semibold text-gray-500 whitespace-nowrap">Gambar Pernyataan:</label>
-          <input type="file" accept="image/*" onchange="previewOptImage(this, 'prev_${rowId}')" class="kat-img-file text-[11px] border rounded p-1 flex-1 bg-gray-50">
+          <label class="text-[10px] font-semibold text-gray-500 whitespace-nowrap">Gambar Pernyataan:</label>
+          <input type="file" accept="image/*" onchange="previewOptImage(this, 'prev_${rowId}')" class="kat-img-file text-[10px] border rounded p-0.5 flex-1 bg-gray-50">
         </div>
-        <img id="prev_${rowId}" src="" class="hidden max-h-24 rounded border object-contain bg-gray-50 p-1 mt-1 ml-6">
+        <img id="prev_${rowId}" src="" class="hidden max-h-20 rounded border object-contain bg-gray-50 p-1 mt-1 ml-6">
       `;
       katContainer.appendChild(div);
     }
@@ -1313,11 +1313,11 @@
 
     function loadGuruUjian() {
       const container = document.getElementById('guruUjianList');
-      container.innerHTML = '<p class="text-sm text-gray-400">Memuat ujian...</p>';
+      container.innerHTML = '<p class="text-xs text-gray-400">Memuat ujian...</p>';
 
       google.script.run.withSuccessHandler(list => {
         if(!list || list.length === 0) { 
-          container.innerHTML = '<p class="text-sm text-gray-500">Belum ada ujian.</p>'; 
+          container.innerHTML = '<p class="text-xs text-gray-500">Belum ada ujian.</p>'; 
           return; 
         }
         container.innerHTML = list.map(u => {
@@ -1329,19 +1329,19 @@
           } catch(e) {}
 
           return `
-            <div class="border p-4 rounded-xl flex justify-between items-center bg-white shadow-sm">
+            <div class="border p-3.5 rounded-xl flex justify-between items-center bg-white shadow-sm">
               <div>
-                <h4 class="font-bold text-gray-800">${u.Judul_Ujian}</h4>
-                <p class="text-xs text-gray-500">${u.Mapel} • Kelas ${u.Kelas} (${sesiText}) • ${u.Durasi_Menit} Menit</p>
+                <h4 class="font-bold text-gray-800 text-xs sm:text-sm">${u.Judul_Ujian}</h4>
+                <p class="text-[11px] text-gray-500">${u.Mapel} • Kelas ${u.Kelas} (${sesiText}) • ${u.Durasi_Menit} Mnt</p>
               </div>
-              <div class="flex items-center space-x-2">
+              <div class="flex items-center space-x-1.5">
                 <button onclick="editUjian('${encodedExam}')" class="text-indigo-600 hover:text-indigo-800 text-xs font-semibold px-2 py-1 rounded bg-indigo-50">
-                  <i class="fa-solid fa-pen"></i> Edit
+                  <i class="fa-solid fa-pen"></i>
                 </button>
-                <button onclick="toggleExamStatus('${u.ID}', '${u.Status === 'Aktif' ? 'Non-Aktif' : 'Aktif'}')" class="text-xs px-3 py-1 rounded-full font-semibold transition ${u.Status === 'Aktif' ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}">
-                  <i class="fa-solid ${u.Status === 'Aktif' ? 'fa-circle-check' : 'fa-circle-xmark'} mr-1"></i> ${u.Status || 'Aktif'}
+                <button onclick="toggleExamStatus('${u.ID}', '${u.Status === 'Aktif' ? 'Non-Aktif' : 'Aktif'}')" class="text-[10px] sm:text-xs px-2.5 py-1 rounded-full font-semibold transition ${u.Status === 'Aktif' ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-700'}">
+                  ${u.Status || 'Aktif'}
                 </button>
-                <button onclick="deleteUjian('${u.ID}')" class="text-red-500 hover:text-red-700 p-1.5"><i class="fa-solid fa-trash"></i></button>
+                <button onclick="deleteUjian('${u.ID}')" class="text-red-500 hover:text-red-700 p-1 text-xs"><i class="fa-solid fa-trash"></i></button>
               </div>
             </div>
           `;
@@ -1376,15 +1376,15 @@
         }
         tbody.innerHTML = list.map(n => `
           <tr class="border-b hover:bg-gray-50">
-            <td class="p-3 text-xs text-gray-500">${n.Waktu_Submit}</td>
-            <td class="p-3 font-medium">${n.Nama_Murid}</td>
-            <td class="p-3">${n.Kelas}</td>
-            <td class="p-3">${n.Judul_Ujian}</td>
-            <td class="p-3 font-bold ${n.Nilai >= 70 ? 'text-green-600' : 'text-red-600'}">${n.Nilai}</td>
-            <td class="p-3 font-semibold ${n.Pelanggaran > 0 ? 'text-red-600' : 'text-gray-500'}">${n.Pelanggaran || 0}x Pindah Tab</td>
-            <td class="p-3">
-              <button onclick="handleResetNilai('${n.ID}')" class="bg-indigo-50 text-indigo-600 hover:bg-indigo-100 text-xs px-2.5 py-1 rounded-lg border border-indigo-200 font-semibold">
-                <i class="fa-solid fa-rotate-left mr-1"></i> Beri Ujian Ulang
+            <td class="p-2 sm:p-3 text-[11px] text-gray-500">${n.Waktu_Submit}</td>
+            <td class="p-2 sm:p-3 font-medium">${n.Nama_Murid}</td>
+            <td class="p-2 sm:p-3">${n.Kelas}</td>
+            <td class="p-2 sm:p-3">${n.Judul_Ujian}</td>
+            <td class="p-2 sm:p-3 font-bold ${n.Nilai >= 70 ? 'text-green-600' : 'text-red-600'}">${n.Nilai}</td>
+            <td class="p-2 sm:p-3 font-semibold ${n.Pelanggaran > 0 ? 'text-red-600' : 'text-gray-500'}">${n.Pelanggaran || 0}x</td>
+            <td class="p-2 sm:p-3">
+              <button onclick="handleResetNilai('${n.ID}')" class="bg-indigo-50 text-indigo-600 hover:bg-indigo-100 text-[11px] sm:text-xs px-2 py-1 rounded border border-indigo-200 font-semibold whitespace-nowrap">
+                Ujian Ulang
               </button>
             </td>
           </tr>
@@ -1411,43 +1411,43 @@
       const btnMateri = document.getElementById('btnMuridMateri');
       const btnCBT = document.getElementById('btnMuridCBT');
 
-      btnMateri.className = 'py-2.5 px-5 font-semibold text-gray-500 hover:text-indigo-600';
-      btnCBT.className = 'py-2.5 px-5 font-semibold text-gray-500 hover:text-indigo-600';
+      btnMateri.className = 'py-2.5 px-4 font-semibold text-gray-500 hover:text-indigo-600';
+      btnCBT.className = 'py-2.5 px-4 font-semibold text-gray-500 hover:text-indigo-600';
 
       if(tab === 'materi') {
         document.getElementById('muridMateriContent').classList.remove('hidden');
-        btnMateri.className = 'py-2.5 px-5 font-semibold border-b-2 border-indigo-600 text-indigo-600';
+        btnMateri.className = 'py-2.5 px-4 font-semibold border-b-2 border-indigo-600 text-indigo-600';
         loadMuridMateri();
       } else if(tab === 'cbt') {
         document.getElementById('muridCBTContent').classList.remove('hidden');
-        btnCBT.className = 'py-2.5 px-5 font-semibold border-b-2 border-indigo-600 text-indigo-600';
+        btnCBT.className = 'py-2.5 px-4 font-semibold border-b-2 border-indigo-600 text-indigo-600';
         loadMuridUjian();
       }
     }
 
     function loadMuridMateri() {
       const container = document.getElementById('muridMateriContent');
-      container.innerHTML = '<p class="text-gray-400">Memuat materi...</p>';
+      container.innerHTML = '<p class="text-xs text-gray-400">Memuat materi...</p>';
 
       google.script.run.withSuccessHandler(list => {
-        if(!list || list.length === 0) { container.innerHTML = '<p class="text-gray-500">Belum ada materi untuk kelas Anda.</p>'; return; }
+        if(!list || list.length === 0) { container.innerHTML = '<p class="text-xs text-gray-500">Belum ada materi untuk kelas Anda.</p>'; return; }
         container.innerHTML = list.map(m => {
           const ytId = extractYoutubeId(m.Konten_Link);
           return `
-            <div class="bg-white p-6 rounded-xl shadow border border-gray-100 space-y-4">
+            <div class="bg-white p-4 sm:p-6 rounded-xl shadow border border-gray-100 space-y-3 sm:space-y-4">
               <div class="flex justify-between items-start">
-                <span class="text-xs bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full font-semibold">${m.Mapel}</span>
-                <span class="text-xs text-gray-400">Oleh: ${m.Nama_Guru}</span>
+                <span class="text-[10px] sm:text-xs bg-indigo-100 text-indigo-700 px-2.5 py-0.5 rounded-full font-semibold">${m.Mapel}</span>
+                <span class="text-[10px] sm:text-xs text-gray-400">Oleh: ${m.Nama_Guru}</span>
               </div>
-              <h3 class="font-bold text-xl text-gray-800">${m.Judul}</h3>
+              <h3 class="font-bold text-base sm:text-xl text-gray-800">${m.Judul}</h3>
 
-              ${m.Gambar_URL ? `<div class="my-2"><img src="${m.Gambar_URL}" class="max-h-80 rounded-lg border object-contain w-full bg-gray-50"></div>` : ''}
+              ${m.Gambar_URL ? `<div class="my-2"><img src="${m.Gambar_URL}" class="max-h-64 sm:max-h-80 rounded-lg border object-contain w-full bg-gray-50"></div>` : ''}
               
-              <div class="text-sm text-gray-700 leading-relaxed whitespace-pre-line">${autoLinkText(m.Konten_Link)}</div>
+              <div class="text-xs sm:text-sm text-gray-700 leading-relaxed whitespace-pre-line">${autoLinkText(m.Konten_Link)}</div>
 
-              <div class="flex justify-between items-center text-xs text-gray-500 border-t pt-3">
+              <div class="flex justify-between items-center text-[10px] sm:text-xs text-gray-500 border-t pt-3">
                 <span>Sumber: ${m.Sumber || 'Materi Guru'}</span>
-                ${ytId ? `<button onclick="playYoutube('${ytId}')" class="bg-red-600 text-white px-3 py-1.5 rounded-lg font-medium hover:bg-red-700 transition shadow-sm"><i class="fa-brands fa-youtube mr-1"></i> Putar Video Popup</button>` : ''}
+                ${ytId ? `<button onclick="playYoutube('${ytId}')" class="bg-red-600 text-white px-2.5 py-1 rounded-lg font-medium hover:bg-red-700 transition shadow-sm"><i class="fa-brands fa-youtube mr-1"></i> Putar Video</button>` : ''}
               </div>
             </div>
           `;
@@ -1458,12 +1458,12 @@
 
     function loadMuridUjian() {
       const container = document.getElementById('ujianAvailableList');
-      container.innerHTML = '<p class="text-gray-400">Memuat daftar ujian...</p>';
+      container.innerHTML = '<p class="text-xs text-gray-400">Memuat daftar ujian...</p>';
 
       google.script.run.withSuccessHandler(hasilList => {
         google.script.run.withSuccessHandler(ujianList => {
           if(!ujianList || ujianList.length === 0) {
-            container.innerHTML = '<p class="text-gray-500">Tidak ada ujian aktif untuk kelas Anda saat ini.</p>';
+            container.innerHTML = '<p class="text-xs text-gray-500">Tidak ada ujian aktif untuk kelas Anda saat ini.</p>';
             return;
           }
           
@@ -1481,23 +1481,23 @@
             const isFinished = maxAttempts > 0 && attemptsDone >= maxAttempts;
 
             return `
-              <div class="bg-white p-5 rounded-xl shadow border border-gray-100 flex flex-col justify-between">
+              <div class="bg-white p-4 rounded-xl shadow border border-gray-100 flex flex-col justify-between">
                 <div>
                   <div class="flex justify-between items-center mb-2">
-                    <span class="text-xs font-semibold bg-gray-100 text-gray-700 px-2 py-0.5 rounded">${u.Mapel || '-'}</span>
-                    <span class="text-xs text-gray-500"><i class="fa-regular fa-clock mr-1"></i> ${u.Durasi_Menit || 0} Menit</span>
+                    <span class="text-[10px] sm:text-xs font-semibold bg-gray-100 text-gray-700 px-2 py-0.5 rounded">${u.Mapel || '-'}</span>
+                    <span class="text-[10px] sm:text-xs text-gray-500"><i class="fa-regular fa-clock mr-1"></i> ${u.Durasi_Menit || 0} Menit</span>
                   </div>
-                  <h4 class="font-bold text-lg text-gray-800 mb-1">${u.Judul_Ujian || '-'}</h4>
-                  <p class="text-xs text-gray-400 mb-2">Percobaan: ${attemptsDone} / ${maxAttempts === 0 ? 'Tanpa Batas' : maxAttempts}</p>
+                  <h4 class="font-bold text-base text-gray-800 mb-1">${u.Judul_Ujian || '-'}</h4>
+                  <p class="text-[11px] text-gray-400 mb-2">Percobaan: ${attemptsDone} / ${maxAttempts === 0 ? 'Tanpa Batas' : maxAttempts}</p>
                 </div>
 
-                <div class="mt-4 border-t pt-3">
+                <div class="mt-3 border-t pt-2.5">
                   ${isFinished ? `
-                    <div class="text-center p-2.5 bg-emerald-50 text-emerald-700 rounded-lg text-sm font-semibold border border-emerald-200">
-                      <i class="fa-solid fa-circle-check mr-1"></i> Selesai (${attemptsDone}x Dikerjakan)
+                    <div class="text-center p-2 bg-emerald-50 text-emerald-700 rounded-lg text-xs font-semibold border border-emerald-200">
+                      <i class="fa-solid fa-circle-check mr-1"></i> Selesai
                     </div>
                   ` : `
-                    <button onclick="startExam('${u.ID}')" class="w-full bg-indigo-600 text-white py-2.5 rounded-lg font-semibold hover:bg-indigo-700 shadow transition">
+                    <button onclick="startExam('${u.ID}')" class="w-full bg-indigo-600 text-white py-2 rounded-lg font-semibold hover:bg-indigo-700 shadow transition text-xs sm:text-sm">
                       Mulai Ujian ${attemptsDone > 0 ? '(Ulangi)' : ''} <i class="fa-solid fa-arrow-right ml-1"></i>
                     </button>
                   `}
@@ -1563,7 +1563,7 @@
         document.getElementById('cbtExamArea').classList.remove('hidden');
 
         document.getElementById('cbtTitle').innerText = exam.Judul_Ujian;
-        document.getElementById('cbtSub').innerText = `${exam.Mapel} • ${activeQuestions.length} Soal (Sesi: ${cfg.sesi || 'Umum'})`;
+        document.getElementById('cbtSub').innerText = `${exam.Mapel} • ${activeQuestions.length} Soal`;
 
         const qContainer = document.getElementById('cbtQuestionsContainer');
         qContainer.innerHTML = activeQuestions.map((q, idx) => {
@@ -1571,17 +1571,17 @@
 
           if(q.type === 'pg') {
             optionsHtml = `
-              <div class="space-y-2.5 mt-2">
+              <div class="space-y-2 mt-2">
                 ${['a', 'b', 'c', 'd'].map(opt => {
                   const textVal = q[opt] || '';
                   const imgVal = q[opt + '_img'] || '';
                   return `
-                    <label class="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-2 sm:space-y-0 text-sm cursor-pointer hover:bg-gray-50 p-3 rounded-xl border border-gray-200 transition bg-white shadow-sm">
-                      <div class="flex items-center space-x-3">
+                    <label class="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-2 sm:space-y-0 text-xs sm:text-sm cursor-pointer hover:bg-gray-50 p-2.5 sm:p-3 rounded-xl border border-gray-200 transition bg-white shadow-sm">
+                      <div class="flex items-center space-x-2.5">
                         <input type="radio" name="q_${idx}" value="${opt.toUpperCase()}" class="w-4 h-4 text-indigo-600 focus:ring-indigo-500 cursor-pointer">
                         <span class="text-gray-800 font-medium">${textVal}</span>
                       </div>
-                      ${imgVal ? `<img src="${imgVal}" class="max-h-28 rounded-lg border object-contain bg-gray-50 p-1 ml-7 sm:ml-0">` : ''}
+                      ${imgVal ? `<img src="${imgVal}" class="max-h-24 rounded-lg border object-contain bg-gray-50 p-1">` : ''}
                     </label>
                   `;
                 }).join('')}
@@ -1590,14 +1590,14 @@
           } else if(q.type === 'pgk_mcma') {
             const options = q.options || [];
             optionsHtml = `
-              <div class="space-y-2.5 mt-3">
+              <div class="space-y-2 mt-2.5">
                 ${options.map((opt, oIdx) => `
-                  <label class="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-2 sm:space-y-0 text-sm cursor-pointer p-3.5 rounded-xl border border-gray-200 hover:bg-gray-50 transition bg-white shadow-sm">
-                    <div class="flex items-center space-x-3">
-                      <input type="checkbox" name="q_${idx}_opt_${oIdx}" value="true" class="w-5 h-5 text-indigo-600 rounded cursor-pointer">
+                  <label class="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-2 sm:space-y-0 text-xs sm:text-sm cursor-pointer p-2.5 sm:p-3 rounded-xl border border-gray-200 hover:bg-gray-50 transition bg-white shadow-sm">
+                    <div class="flex items-center space-x-2.5">
+                      <input type="checkbox" name="q_${idx}_opt_${oIdx}" value="true" class="w-4 h-4 text-indigo-600 rounded cursor-pointer">
                       <span class="text-gray-800 font-medium">${opt.text}</span>
                     </div>
-                    ${opt.img ? `<img src="${opt.img}" class="max-h-28 rounded-lg border object-contain bg-gray-50 p-1">` : ''}
+                    ${opt.img ? `<img src="${opt.img}" class="max-h-24 rounded-lg border object-contain bg-gray-50 p-1">` : ''}
                   </label>
                 `).join('')}
               </div>
@@ -1605,31 +1605,31 @@
           } else if(q.type === 'pgk_kategori') {
             const rows = q.rows || [];
             optionsHtml = `
-              <div class="overflow-x-auto mt-3 rounded-xl border border-blue-200 shadow-sm">
-                <table class="w-full text-sm text-left border-collapse">
+              <div class="overflow-x-auto mt-2.5 rounded-xl border border-blue-200 shadow-sm">
+                <table class="w-full text-xs sm:text-sm text-left border-collapse">
                   <thead class="bg-blue-100/80 text-blue-900 border-b border-blue-200">
                     <tr>
-                      <th class="p-3 font-semibold text-gray-700">Pernyataan Soal</th>
-                      <th class="p-3 w-28 text-center font-bold text-blue-900 border-l border-blue-200">${q.col1 || 'Sebelum'}</th>
-                      <th class="p-3 w-28 text-center font-bold text-blue-900 border-l border-blue-200">${q.col2 || 'Sesudah'}</th>
+                      <th class="p-2 sm:p-3 font-semibold text-gray-700">Pernyataan Soal</th>
+                      <th class="p-2 sm:p-3 w-20 sm:w-28 text-center font-bold text-blue-900 border-l border-blue-200">${q.col1 || 'Sebelum'}</th>
+                      <th class="p-2 sm:p-3 w-20 sm:w-28 text-center font-bold text-blue-900 border-l border-blue-200">${q.col2 || 'Sesudah'}</th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-200 bg-white">
                     ${rows.map((r, rIdx) => `
                       <tr class="hover:bg-gray-50/80">
-                        <td class="p-3 text-gray-800 font-medium">
-                          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                            <span>${r.text}</span>${r.img ? `<img src="${r.img}" class="max-h-24 rounded border object-contain bg-gray-50 p-1">` : ''}
+                        <td class="p-2 sm:p-3 text-gray-800 font-medium">
+                          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
+                            <span>${r.text}</span>${r.img ? `<img src="${r.img}" class="max-h-20 rounded border object-contain bg-gray-50 p-1">` : ''}
                           </div>
                         </td>
-                        <td class="p-3 text-center border-l border-gray-200">
+                        <td class="p-2 sm:p-3 text-center border-l border-gray-200">
                           <label class="cursor-pointer inline-flex items-center justify-center w-full">
-                            <input type="radio" name="q_${idx}_row_${rIdx}" value="col1" class="w-5 h-5 text-indigo-600 cursor-pointer">
+                            <input type="radio" name="q_${idx}_row_${rIdx}" value="col1" class="w-4 h-4 text-indigo-600 cursor-pointer">
                           </label>
                         </td>
-                        <td class="p-3 text-center border-l border-gray-200">
+                        <td class="p-2 sm:p-3 text-center border-l border-gray-200">
                           <label class="cursor-pointer inline-flex items-center justify-center w-full">
-                            <input type="radio" name="q_${idx}_row_${rIdx}" value="col2" class="w-5 h-5 text-indigo-600 cursor-pointer">
+                            <input type="radio" name="q_${idx}_row_${rIdx}" value="col2" class="w-4 h-4 text-indigo-600 cursor-pointer">
                           </label>
                         </td>
                       </tr>
@@ -1641,14 +1641,14 @@
           }
 
           return `
-            <div class="border-b pb-6 space-y-3">
+            <div class="border-b pb-5 space-y-2.5">
               <div class="flex items-center justify-between">
-                <span class="font-bold text-indigo-600 text-sm">Soal Nomor ${idx + 1}</span>
+                <span class="font-bold text-indigo-600 text-xs sm:text-sm">Soal Nomor ${idx + 1}</span>
               </div>
 
-              ${q.gambar ? `<div class="my-3"><img src="${q.gambar}" class="max-h-80 rounded-lg border object-contain w-full bg-gray-50 shadow-sm"></div>` : ''}
+              ${q.gambar ? `<div class="my-2"><img src="${q.gambar}" class="max-h-64 sm:max-h-80 rounded-lg border object-contain w-full bg-gray-50 shadow-sm"></div>` : ''}
 
-              <div class="text-sm text-gray-800 whitespace-pre-line leading-relaxed font-medium">${autoLinkText(q.soal)}</div>
+              <div class="text-xs sm:text-sm text-gray-800 whitespace-pre-line leading-relaxed font-medium">${autoLinkText(q.soal)}</div>
               <div>${optionsHtml}</div>
             </div>
           `;
