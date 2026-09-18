@@ -1477,64 +1477,74 @@
       renderMath(container);
     }
 
+    // PEMUATAN DAFTAR UJIAN DALAM 1 REQUEST RINGAN
     function loadMuridUjian() {
       const container = document.getElementById('ujianAvailableList');
       container.innerHTML = '<p class="text-xs text-gray-400">Memuat daftar ujian...</p>';
 
-      google.script.run.withSuccessHandler(hasilList => {
-        google.script.run.withSuccessHandler(ujianList => {
-          if(!ujianList || ujianList.length === 0) {
-            container.innerHTML = '<p class="text-xs text-gray-500">Tidak ada ujian aktif untuk kelas Anda saat ini.</p>';
-            return;
-          }
-          
-          const safeHasilList = hasilList || [];
-          container.innerHTML = ujianList.map(u => {
-            let parsedPayload = { config: {} };
-            try { parsedPayload = JSON.parse(u.Soal_JSON || '{}'); } catch(e){}
-            const cfg = parsedPayload.config || {};
-            
-            const sesiCocok = !cfg.sesi || cfg.sesi === 'Semua' || currentUser.kelas.includes(cfg.sesi);
-            if (!sesiCocok) return '';
+      google.script.run.withSuccessHandler(res => {
+        if (!res || !res.success) {
+          container.innerHTML = '<p class="text-xs text-gray-500">Gagal mengambil data ujian.</p>';
+          return;
+        }
 
-            const attemptsDone = safeHasilList.filter(h => String(h.ID_Ujian).trim() === String(u.ID).trim()).length;
-            const maxAttempts = cfg.max_attempts !== undefined ? cfg.max_attempts : 1;
-            const isFinished = maxAttempts > 0 && attemptsDone >= maxAttempts;
+        const ujianList = res.ujianList || [];
+        const safeHasilList = res.hasilList || [];
 
-            return `
-              <div class="bg-white p-4 rounded-xl shadow border border-gray-100 flex flex-col justify-between">
-                <div>
-                  <div class="flex justify-between items-center mb-2">
-                    <span class="text-[10px] sm:text-xs font-semibold bg-gray-100 text-gray-700 px-2 py-0.5 rounded">${u.Mapel || '-'}</span>
-                    <span class="text-[10px] sm:text-xs text-gray-500"><i class="fa-regular fa-clock mr-1"></i> ${u.Durasi_Menit || 0} Menit</span>
-                  </div>
-                  <h4 class="font-bold text-base text-gray-800 mb-1">${u.Judul_Ujian || '-'}</h4>
-                  <p class="text-[11px] text-gray-400 mb-2">Percobaan: ${attemptsDone} / ${maxAttempts === 0 ? 'Tanpa Batas' : maxAttempts}</p>
+        if (ujianList.length === 0) {
+          container.innerHTML = '<p class="text-xs text-gray-500">Tidak ada ujian aktif untuk kelas Anda saat ini.</p>';
+          return;
+        }
+
+        container.innerHTML = ujianList.map(u => {
+          const cfg = u.Config || {};
+          const sesiCocok = !cfg.sesi || cfg.sesi === 'Semua' || currentUser.kelas.includes(cfg.sesi);
+          if (!sesiCocok) return '';
+
+          const attemptsDone = safeHasilList.filter(h => String(h.ID_Ujian).trim() === String(u.ID).trim()).length;
+          const maxAttempts = cfg.max_attempts !== undefined ? cfg.max_attempts : 1;
+          const isFinished = maxAttempts > 0 && attemptsDone >= maxAttempts;
+
+          return `
+            <div class="bg-white p-4 rounded-xl shadow border border-gray-100 flex flex-col justify-between">
+              <div>
+                <div class="flex justify-between items-center mb-2">
+                  <span class="text-[10px] sm:text-xs font-semibold bg-gray-100 text-gray-700 px-2 py-0.5 rounded">${u.Mapel || '-'}</span>
+                  <span class="text-[10px] sm:text-xs text-gray-500"><i class="fa-regular fa-clock mr-1"></i> ${u.Durasi_Menit || 0} Menit</span>
                 </div>
-
-                <div class="mt-3 border-t pt-2.5">
-                  ${isFinished ? `
-                    <div class="text-center p-2 bg-emerald-50 text-emerald-700 rounded-lg text-xs font-semibold border border-emerald-200">
-                      <i class="fa-solid fa-circle-check mr-1"></i> Selesai
-                    </div>
-                  ` : `
-                    <button onclick="startExam('${u.ID}')" class="w-full bg-indigo-600 text-white py-2 rounded-lg font-semibold hover:bg-indigo-700 shadow transition text-xs sm:text-sm">
-                      Mulai Ujian ${attemptsDone > 0 ? '(Ulangi)' : ''} <i class="fa-solid fa-arrow-right ml-1"></i>
-                    </button>
-                  `}
-                </div>
+                <h4 class="font-bold text-base text-gray-800 mb-1">${u.Judul_Ujian || '-'}</h4>
+                <p class="text-[11px] text-gray-400 mb-2">Percobaan: ${attemptsDone} / ${maxAttempts === 0 ? 'Tanpa Batas' : maxAttempts}</p>
               </div>
-            `;
-          }).join('');
-        }).getUjianList(currentUser.kelas, 'murid');
-      }).getHasilMurid(currentUser.nama);
+
+              <div class="mt-3 border-t pt-2.5">
+                ${isFinished ? `
+                  <div class="text-center p-2 bg-emerald-50 text-emerald-700 rounded-lg text-xs font-semibold border border-emerald-200">
+                    <i class="fa-solid fa-circle-check mr-1"></i> Selesai
+                  </div>
+                ` : `
+                  <button onclick="startExam('${u.ID}')" class="w-full bg-indigo-600 text-white py-2 rounded-lg font-semibold hover:bg-indigo-700 shadow transition text-xs sm:text-sm">
+                    Mulai Ujian ${attemptsDone > 0 ? '(Ulangi)' : ''} <i class="fa-solid fa-arrow-right ml-1"></i>
+                  </button>
+                `}
+              </div>
+            </div>
+          `;
+        }).join('');
+      }).getDashboardMuridData(currentUser.kelas, currentUser.nama);
     }
 
+    // PEMUATAN DETAIL SOAL SECARA LAZY-LOADING
     function startExam(examId) {
-      google.script.run.withSuccessHandler(list => {
-        const exam = list.find(u => u.ID === examId);
-        if(!exam) return;
+      showCustomAlert("Menyiapkan lembar soal ujian...", "Mohon Tunggu", "info");
 
+      google.script.run.withSuccessHandler(res => {
+        closeCustomModal(true);
+        if (!res || !res.success) {
+          showCustomAlert("Gagal memuat soal ujian.", "Error", "error");
+          return;
+        }
+
+        const exam = res.exam;
         activeExamData = exam;
         cheatCounter = 0;
         isExamRunning = true;
@@ -1678,7 +1688,7 @@
         renderMath(qContainer);
         startTimer(parseInt(exam.Durasi_Menit) * 60);
 
-      }).getUjianList(currentUser.kelas, 'murid');
+      }).getDetailSoalUjian(examId);
     }
 
     document.addEventListener("visibilitychange", async () => {
