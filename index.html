@@ -16,39 +16,50 @@
 </head>
 <body class="bg-gray-100 font-sans min-h-screen text-gray-800 selection:bg-indigo-500 selection:text-white">
 
-  <!-- PASTE URL DEPLOYMENT GOOGLE APPS SCRIPT ANDA DI BAWAH INI -->
   <script>
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzcbCc8KPp_3j12m5XJULPdUd6UPSBWY2TuLwfwNd092WR-2NSqGezLlV9MvwyFG0U5yA/exec";
 
-    // PROXY SAFELY HANDLING NON-JSON AND TIMEOUT RESPONSES
+    // PROXY SAFELY HANDLING RETRIES, TIMEOUTS, AND NON-JSON RESPONSES
     function createGasProxy(successCb = null, failureCb = null) {
       return new Proxy({}, {
         get(target, prop) {
           if (prop === 'withSuccessHandler') return (fn) => createGasProxy(fn, failureCb);
           if (prop === 'withFailureHandler') return (fn) => createGasProxy(successCb, fn);
           return async function(...args) {
-            try {
-              const res = await fetch(GAS_WEB_APP_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                body: JSON.stringify({ action: prop, args: args }),
-                redirect: 'follow'
-              });
-              const text = await res.text();
-              let json;
+            const maxRetries = 2;
+            for (let attempt = 1; attempt <= maxRetries; attempt++) {
               try {
-                json = JSON.parse(text);
-              } catch (jsonErr) {
-                throw new Error("Server Google sedang sibuk atau mengalami timeout. Silakan klik tombol sekali lagi.");
-              }
-              if (successCb) successCb(json);
-              return json;
-            } catch (e) {
-              if (failureCb) failureCb(e);
-              else if (typeof showCustomAlert === 'function') {
-                showCustomAlert(e.message, "Koneksi Terganggu", "warning");
-              } else {
-                alert(e.message);
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+                const res = await fetch(GAS_WEB_APP_URL, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                  body: JSON.stringify({ action: prop, args: args }),
+                  redirect: 'follow',
+                  signal: controller.signal
+                });
+                clearTimeout(timeoutId);
+
+                const text = await res.text();
+                let json;
+                try {
+                  json = JSON.parse(text);
+                } catch (jsonErr) {
+                  throw new Error("Server Google sedang sibuk. Silakan klik tombol sekali lagi.");
+                }
+                if (successCb) successCb(json);
+                return json;
+              } catch (e) {
+                if (attempt === maxRetries) {
+                  const errorMsg = e.name === 'AbortError' ? "Koneksi ke server timeout. Silakan coba lagi." : e.message;
+                  if (failureCb) failureCb(new Error(errorMsg));
+                  else if (typeof showCustomAlert === 'function') {
+                    showCustomAlert(errorMsg, "Koneksi Terganggu", "warning");
+                  } else {
+                    alert(errorMsg);
+                  }
+                }
               }
             }
           };
@@ -275,7 +286,7 @@
                   </label>
                   <label class="inline-flex items-center text-xs font-semibold text-gray-700 cursor-pointer">
                     <input type="checkbox" id="examAcakOpsi" checked class="w-4 h-4 text-indigo-600 rounded">
-                    <span class="ml-1.5">Acak Opsi Pilihan (A,B,C,D / MCMA / Tabel)</span>
+                    <span class="ml-1.5">Acak Opsi Pilihan Ganda (A,B,C,D)</span>
                   </label>
                 </div>
               </div>
@@ -502,11 +513,11 @@
 
     function renderMath() {
       if (window.MathJax && typeof window.MathJax.typesetPromise === 'function') {
-        window.MathJax.typesetPromise();
+        window.MathJax.typesetPromise().catch(err => console.log('MathJax error ignored:', err));
       }
     }
 
-    function compressAndReadImage(file, maxDim = 500, quality = 0.7) {
+    function compressAndReadImage(file, maxDim = 450, quality = 0.5) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -672,7 +683,6 @@
 
     function autoLinkText(text) {
       if (!text) return '';
-      // Mencegah linkify merusak atribut HTML seperti src="https://..." atau href="https://..."
       return text.replace(/(^|[^="'])https?:\/\/[^\s<"]+/g, function(match, prefix) {
         const url = match.trim();
         return `${prefix}<a href="${url}" target="_blank" rel="noopener noreferrer" class="text-blue-600 underline font-semibold hover:text-blue-800 break-all inline-flex items-center gap-1 my-0.5">${url} <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i></a>`;
@@ -1518,34 +1528,29 @@
           rawQuestions = shuffleArray(rawQuestions);
         }
 
+        // HANYA ACAK OPSI UNTUK PILIHAN GANDA (PG). MCMA DAN KATEGORI TIDAK DIACAK
         activeQuestions = rawQuestions.map(q => {
-          const newQ = { ...q };
-          if (cfg.acak_opsi !== false) {
-            if (newQ.type === 'pg') {
-              const keys = ['a', 'b', 'c', 'd'];
-              const originalKunciKey = (newQ.kunci || 'A').toLowerCase();
-              
-              const originalOptions = keys.map(k => ({
-                key: k,
-                text: newQ[k] || '',
-                img: newQ[k + '_img'] || '',
-                isKey: k === originalKunciKey
-              }));
+          const newQ = JSON.parse(JSON.stringify(q));
+          if (cfg.acak_opsi !== false && newQ.type === 'pg') {
+            const keys = ['a', 'b', 'c', 'd'];
+            const originalKunciKey = (newQ.kunci || 'A').toLowerCase();
+            
+            const originalOptions = keys.map(k => ({
+              key: k,
+              text: newQ[k] || '',
+              img: newQ[k + '_img'] || '',
+              isKey: k === originalKunciKey
+            }));
 
-              const shuffledOpts = shuffleArray(originalOptions);
+            const shuffledOpts = shuffleArray(originalOptions);
 
-              keys.forEach((k, idx) => {
-                newQ[k] = shuffledOpts[idx].text;
-                newQ[k + '_img'] = shuffledOpts[idx].img;
-                if (shuffledOpts[idx].isKey) {
-                  newQ.kunci = k.toUpperCase();
-                }
-              });
-            } else if (newQ.type === 'pgk_mcma' && Array.isArray(newQ.options)) {
-              newQ.options = shuffleArray(newQ.options);
-            } else if (newQ.type === 'pgk_kategori' && Array.isArray(newQ.rows)) {
-              newQ.rows = shuffleArray(newQ.rows);
-            }
+            keys.forEach((k, idx) => {
+              newQ[k] = shuffledOpts[idx].text;
+              newQ[k + '_img'] = shuffledOpts[idx].img;
+              if (shuffledOpts[idx].isKey) {
+                newQ.kunci = k.toUpperCase();
+              }
+            });
           }
           return newQ;
         });
