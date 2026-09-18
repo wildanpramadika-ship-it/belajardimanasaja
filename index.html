@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>E-Learning & CBT System</title>
   
+  <!-- CSS Statis Minified: Meringankan pemrosesan di HP hingga 90% -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   
@@ -14,6 +15,7 @@
       svg: { fontCache: 'global' }
     };
   </script>
+  <!-- MathJax dimuat secara defer agar halaman terbuka tanpa tertahan -->
   <script id="MathJax-script" defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body class="bg-gray-100 font-sans min-h-screen text-gray-800 selection:bg-indigo-500 selection:text-white">
@@ -21,7 +23,7 @@
   <script>
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzcbCc8KPp_3j12m5XJULPdUd6UPSBWY2TuLwfwNd092WR-2NSqGezLlV9MvwyFG0U5yA/exec";
 
-    // PROXY CEPAT & TRANSPARAN (TIMEOUT 12 DETIK)
+    // PROXY DENGAN TIMEOUT 12 DETIK & DUKUNGAN REDIRECT CEPAT
     function createGasProxy(successCb = null, failureCb = null) {
       return new Proxy({}, {
         get(target, prop) {
@@ -80,6 +82,7 @@
         </button>
       </form>
       <div id="loginAlert" class="mt-4 text-center text-sm font-medium text-red-500 hidden"></div>
+      
       <div class="mt-6 border-t pt-4 text-center text-xs text-gray-400 font-semibold tracking-wide">
         @2026MohamadWildanPramadika
       </div>
@@ -88,6 +91,7 @@
 
   <!-- MAIN APP CONTAINER -->
   <div id="appSection" class="hidden min-h-screen flex flex-col">
+    <!-- NAVBAR -->
     <header class="bg-indigo-700 text-white shadow-md">
       <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
         <div class="flex items-center space-x-2 sm:space-x-3">
@@ -106,64 +110,68 @@
       </div>
     </header>
 
+    <!-- CONTENT WRAPPER -->
     <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6">
       
       <!-- ADMIN VIEW -->
-<!-- ADMIN VIEW -->
-<div id="adminView" class="hidden space-y-6 pb-16">
-  <h2 class="text-lg sm:text-xl font-bold text-gray-800">Panel Administrasi User</h2>
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-    <div class="bg-white p-5 rounded-xl shadow border border-gray-100">
-      <h3 class="font-semibold text-lg mb-4 text-gray-800">Tambah Pengguna Baru</h3>
-      <form onsubmit="handleAddUser(event)" class="space-y-3">
-        <div>
-          <label class="block text-xs font-semibold text-gray-700 mb-1">Nama Lengkap</label>
-          <input type="text" id="addUserNama" placeholder="Nama Lengkap" required class="w-full border rounded-lg p-2.5 text-sm">
+      <div id="adminView" class="hidden space-y-6 pb-16">
+        <h2 class="text-lg sm:text-xl font-bold text-gray-800">Panel Administrasi User</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="bg-white p-5 rounded-xl shadow border border-gray-100">
+            <h3 class="font-semibold text-lg mb-4 text-gray-800">Tambah Pengguna Baru</h3>
+            <form onsubmit="handleAddUser(event)" class="space-y-3 pb-2">
+              <div>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">Nama Lengkap</label>
+                <input type="text" id="addUserNama" placeholder="Nama Lengkap" required class="w-full border rounded-lg p-2.5 text-sm">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">Username</label>
+                <input type="text" id="addUserUsername" placeholder="Username" required class="w-full border rounded-lg p-2.5 text-sm">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">Password</label>
+                <input type="password" id="addUserPassword" placeholder="Password" required class="w-full border rounded-lg p-2.5 text-sm">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">Role</label>
+                <select id="addUserRole" required class="w-full border rounded-lg p-2.5 text-sm bg-white">
+                  <option value="murid">Murid</option>
+                  <option value="guru">Guru</option>
+                  <option value="admin">Admin</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">Kelas / Sesi</label>
+                <input type="text" id="addUserKelas" placeholder="Kelas (contoh: 6A / Sesi 1)" required class="w-full border rounded-lg p-2.5 text-sm">
+              </div>
+              
+              <div class="pt-2">
+                <button type="submit" class="w-full bg-emerald-600 text-white py-3 rounded-lg font-bold hover:bg-emerald-700 text-sm shadow transition cursor-pointer">
+                  <i class="fa-solid fa-user-plus mr-1.5"></i> Simpan User
+                </button>
+              </div>
+            </form>
+          </div>
+          
+          <div class="bg-white p-5 rounded-xl shadow border border-gray-100 md:col-span-2">
+            <h3 class="font-semibold text-lg mb-4 text-gray-800">Daftar Pengguna</h3>
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm text-left border rounded-lg">
+                <thead class="bg-gray-100 border-b">
+                  <tr>
+                    <th class="p-2.5">Nama</th>
+                    <th class="p-2.5">Username</th>
+                    <th class="p-2.5">Role</th>
+                    <th class="p-2.5">Kelas/Sesi</th>
+                    <th class="p-2.5">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="userTableBody"></tbody>
+              </table>
+            </div>
+          </div>
         </div>
-        <div>
-          <label class="block text-xs font-semibold text-gray-700 mb-1">Username</label>
-          <input type="text" id="addUserUsername" placeholder="Username" required class="w-full border rounded-lg p-2.5 text-sm">
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-gray-700 mb-1">Password</label>
-          <input type="password" id="addUserPassword" placeholder="Password" required class="w-full border rounded-lg p-2.5 text-sm">
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-gray-700 mb-1">Role</label>
-          <select id="addUserRole" required class="w-full border rounded-lg p-2.5 text-sm bg-white">
-            <option value="murid">Murid</option>
-            <option value="guru">Guru</option>
-            <option value="admin">Admin</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-gray-700 mb-1">Kelas / Sesi</label>
-          <input type="text" id="addUserKelas" placeholder="Kelas (contoh: 6A / Sesi 1)" required class="w-full border rounded-lg p-2.5 text-sm">
-        </div>
-        <button type="submit" class="w-full bg-emerald-600 text-white py-2.5 rounded-lg font-bold hover:bg-emerald-700 text-sm shadow transition mt-2 cursor-pointer">
-          <i class="fa-solid fa-user-plus mr-1.5"></i> Simpan User
-        </button>
-      </form>
-    </div>
-    <div class="bg-white p-5 rounded-xl shadow border border-gray-100 md:col-span-2">
-      <h3 class="font-semibold text-lg mb-4 text-gray-800">Daftar Pengguna</h3>
-      <div class="overflow-x-auto">
-        <table class="w-full text-sm text-left border rounded-lg">
-          <thead class="bg-gray-100 border-b">
-            <tr>
-              <th class="p-2.5">Nama</th>
-              <th class="p-2.5">Username</th>
-              <th class="p-2.5">Role</th>
-              <th class="p-2.5">Kelas/Sesi</th>
-              <th class="p-2.5">Aksi</th>
-            </tr>
-          </thead>
-          <tbody id="userTableBody"></tbody>
-        </table>
       </div>
-    </div>
-  </div>
-</div>
 
       <!-- GURU VIEW -->
       <div id="guruView" class="hidden space-y-6">
@@ -305,9 +313,8 @@
                 <div id="soalContainer" class="space-y-4 max-h-[60vh] overflow-y-auto pr-1"></div>
               </div>
 
-              <!-- TOMBOL PERUBAHAN & EDIT -->
               <div class="flex space-x-2 pt-2">
-                <button type="submit" id="btnSubmitUjian" class="flex-1 bg-emerald-600 text-white py-2.5 rounded-lg font-bold hover:bg-emerald-700 transition shadow-md text-sm">
+                <button type="submit" id="btnSubmitUjian" class="flex-1 bg-emerald-600 text-white py-2.5 rounded-lg font-bold hover:bg-emerald-700 transition shadow-md text-sm cursor-pointer">
                   Simpan Perubahan Ujian
                 </button>
                 <button type="button" id="btnCancelUjian" onclick="resetUjianForm()" class="bg-gray-200 text-gray-700 px-4 rounded-lg text-sm hover:bg-gray-300 font-medium">Batal</button>
@@ -359,45 +366,32 @@
           <div id="ujianAvailableList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-5"></div>
         </div>
 
-        <!-- AREA UJIAN CBT DENGAN FOOTER STICKY (MEMASTIKAN TOMBOL KIRIM JAWABAN TIDAK HILANG) -->
-        <!-- AREA UJIAN CBT FIXED FULLSCREEN (TIDAK AKAN TERPOTONG DI HP) -->
-<div id="cbtExamArea" class="hidden fixed inset-0 bg-white z-50 flex flex-col h-screen w-screen overflow-hidden">
-  
-  <!-- HEADER UJIAN -->
-  <div class="p-4 border-b bg-indigo-700 text-white flex justify-between items-center shrink-0 shadow-md">
-    <div>
-      <h3 id="cbtTitle" class="text-base sm:text-xl font-bold"></h3>
-      <p id="cbtSub" class="text-xs sm:text-sm text-indigo-100"></p>
-    </div>
-    <div class="text-right bg-indigo-800 px-3 py-1 rounded-lg">
-      <span class="text-[10px] sm:text-xs text-indigo-200 block">Sisa Waktu</span>
-      <span id="cbtTimer" class="text-lg sm:text-2xl font-mono font-bold text-yellow-300">00:00</span>
-    </div>
-  </div>
+        <!-- AREA UJIAN CBT FIXED FULLSCREEN AMAN LAYAR HP (DYNAMIC VIEWPORT 100dvh) -->
+        <div id="cbtExamArea" class="hidden fixed inset-0 bg-gray-50 z-50 flex flex-col h-[100dvh] w-screen overflow-hidden">
+          
+          <!-- HEADER UJIAN -->
+          <div class="p-3 sm:p-4 bg-indigo-700 text-white flex justify-between items-center shrink-0 shadow-md">
+            <div>
+              <h3 id="cbtTitle" class="text-base sm:text-lg font-bold"></h3>
+              <p id="cbtSub" class="text-xs text-indigo-100"></p>
+            </div>
+            <div class="text-right bg-indigo-800 px-3 py-1 rounded-lg">
+              <span class="text-[10px] text-indigo-200 block">Sisa Waktu</span>
+              <span id="cbtTimer" class="text-lg sm:text-2xl font-mono font-bold text-yellow-300">00:00</span>
+            </div>
+          </div>
 
-  <div id="cheatWarningBanner" class="hidden p-3 bg-red-100 border-b border-red-400 text-red-700 text-xs sm:text-sm flex justify-between items-center shrink-0">
-    <span><i class="fa-solid fa-triangle-exclamation mr-1.5"></i> Terdeteksi meninggalkan halaman: <strong id="cheatCountText">0</strong> kali.</span>
-  </div>
-
-  <!-- DAFTAR SOAL (SCROLLABLE AREA) -->
-  <div id="cbtQuestionsContainer" class="flex-1 p-4 sm:p-6 overflow-y-auto space-y-6"></div>
-  
-  <!-- FOOTER TOMBOL KIRIM JAWABAN (PERMANEN DI BAWAH LAYAR) -->
-  <div class="p-3 sm:p-4 bg-gray-100 border-t flex justify-between items-center shrink-0 shadow-lg z-20">
-    <span class="text-[10px] sm:text-xs text-gray-500 font-semibold"><i class="fa-solid fa-shield-halved text-indigo-500 mr-1"></i> Mode Ujian Aktif</span>
-    <button onclick="submitExam(false)" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-2.5 rounded-xl shadow-md transition text-xs sm:text-base flex items-center gap-2 cursor-pointer">
-      <span>Kirim Jawaban</span> <i class="fa-solid fa-paper-plane"></i>
-    </button>
-  </div>
-</div>
+          <div id="cheatWarningBanner" class="hidden p-3 bg-red-100 border-b border-red-400 text-red-700 text-xs flex justify-between items-center shrink-0">
+            <span><i class="fa-solid fa-triangle-exclamation mr-1.5"></i> Terdeteksi meninggalkan halaman: <strong id="cheatCountText">0</strong> kali.</span>
+          </div>
 
           <!-- DAFTAR SOAL -->
-          <div id="cbtQuestionsContainer" class="flex-1 p-4 sm:p-6 overflow-y-auto space-y-6"></div>
+          <div id="cbtQuestionsContainer" class="flex-1 p-4 sm:p-6 overflow-y-auto space-y-6 pb-28"></div>
           
-          <!-- FOOTER TOMBOL KIRIM JAWABAN STICKY DI BAWAH HP -->
-          <div class="p-3 sm:p-4 bg-gray-50 border-t rounded-b-xl flex justify-between items-center sticky bottom-0 z-20 shadow-lg">
-            <span class="text-[10px] sm:text-xs text-gray-500 font-semibold"><i class="fa-solid fa-shield-halved text-indigo-500 mr-1"></i> Mode Ujian Aktif</span>
-            <button onclick="submitExam(false)" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-5 py-2.5 rounded-lg shadow-md transition text-xs sm:text-sm flex items-center gap-1.5">
+          <!-- FOOTER MELAYANG DENGAN KETINGGIAN AMAN DI HP (FLOATING BOTTOM Z-[9999]) -->
+          <div class="fixed bottom-0 left-0 right-0 p-3 sm:p-4 bg-white border-t border-gray-200 flex justify-between items-center z-[9999] shadow-[0_-4px_10px_rgba(0,0,0,0.1)]">
+            <span class="text-[10px] sm:text-xs text-gray-500 font-semibold"><i class="fa-solid fa-shield-halved text-indigo-500 mr-1"></i> Mode Ujian</span>
+            <button onclick="submitExam(false)" class="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold px-5 py-2.5 rounded-xl shadow-md transition text-xs sm:text-sm flex items-center gap-2 cursor-pointer">
               <span>Kirim Jawaban</span> <i class="fa-solid fa-paper-plane"></i>
             </button>
           </div>
@@ -964,7 +958,7 @@
                   <p class="text-[11px] sm:text-xs text-gray-500">${m.Mapel} • Target: Kelas ${m.Kelas} • Oleh ${m.Nama_Guru}</p>
                 </div>
                 <div class="space-x-1 whitespace-nowrap">
-                  <button onclick="editMateri('${encodedMateri}')" class="text-indigo-600 hover:text-indigo-800 text-xs font-semibold px-2 py-1 rounded bg-indigo-50"><i class="fa-solid fa-pen"></i> Edit</button>
+                  <button onclick="editMateri('${encodedMateri}')" class="text-indigo-600 hover:text-indigo-800 text-xs font-semibold px-2.5 py-1 rounded bg-indigo-50 border border-indigo-200"><i class="fa-solid fa-pen mr-1"></i> Edit</button>
                   <button onclick="deleteMateri('${m.ID}')" class="text-red-600 hover:text-red-800 text-xs font-semibold px-2 py-1 rounded bg-red-50"><i class="fa-solid fa-trash"></i></button>
                 </div>
               </div>
