@@ -16,33 +16,40 @@
 </head>
 <body class="bg-gray-100 font-sans min-h-screen text-gray-800 selection:bg-indigo-500 selection:text-white">
 
-  <!-- TEMPELKAN URL DEPLOYMENT GOOGLE APPS SCRIPT ANDA DI BAWAH INI -->
+  <!-- PASTE URL DEPLOYMENT GOOGLE APPS SCRIPT ANDA DI BAWAH INI -->
   <script>
-    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzcbCc8KPp_3j12m5XJULPdUd6UPSBWY2TuLwfwNd092WR-2NSqGezLlV9MvwyFG0U5yA/exec";
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwCqf1vnHI09ud7IV3pOFgGdShJaqjbv_6y74bv8FNp_s_S80k8xT5w0O5Z5nIUpC9o/exec";
 
-    // PROXY PEMBUNGKUS AGAR BISA JALAN DI GITHUB PAGES DENGAN FETCH API
+    // PROXY SAFELY HANDLING NON-JSON AND TIMEOUT RESPONSES
     function createGasProxy(successCb = null, failureCb = null) {
       return new Proxy({}, {
         get(target, prop) {
-          if (prop === 'withSuccessHandler') {
-            return (fn) => createGasProxy(fn, failureCb);
-          }
-          if (prop === 'withFailureHandler') {
-            return (fn) => createGasProxy(successCb, fn);
-          }
+          if (prop === 'withSuccessHandler') return (fn) => createGasProxy(fn, failureCb);
+          if (prop === 'withFailureHandler') return (fn) => createGasProxy(successCb, fn);
           return async function(...args) {
             try {
               const res = await fetch(GAS_WEB_APP_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                body: JSON.stringify({ action: prop, args: args })
+                body: JSON.stringify({ action: prop, args: args }),
+                redirect: 'follow'
               });
-              const json = await res.json();
+              const text = await res.text();
+              let json;
+              try {
+                json = JSON.parse(text);
+              } catch (jsonErr) {
+                throw new Error("Server Google sedang sibuk atau mengalami timeout. Silakan klik tombol sekali lagi.");
+              }
               if (successCb) successCb(json);
               return json;
             } catch (e) {
               if (failureCb) failureCb(e);
-              else console.error("GAS API Error:", e);
+              else if (typeof showCustomAlert === 'function') {
+                showCustomAlert(e.message, "Koneksi Terganggu", "warning");
+              } else {
+                alert(e.message);
+              }
             }
           };
         }
@@ -268,7 +275,7 @@
                   </label>
                   <label class="inline-flex items-center text-xs font-semibold text-gray-700 cursor-pointer">
                     <input type="checkbox" id="examAcakOpsi" checked class="w-4 h-4 text-indigo-600 rounded">
-                    <span class="ml-1.5">Acak Opsi Pilihan (A,B,C,D)</span>
+                    <span class="ml-1.5">Acak Opsi Pilihan (A,B,C,D / MCMA / Tabel)</span>
                   </label>
                 </div>
               </div>
@@ -665,9 +672,10 @@
 
     function autoLinkText(text) {
       if (!text) return '';
-      const urlRegex = /(https?:\/\/[^\s]+)/g;
-      return text.replace(urlRegex, function(url) {
-        return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="text-blue-600 underline font-semibold hover:text-blue-800 break-all inline-flex items-center gap-1 my-0.5">${url} <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i></a>`;
+      // Mencegah linkify merusak atribut HTML seperti src="https://..." atau href="https://..."
+      return text.replace(/(^|[^="'])https?:\/\/[^\s<"]+/g, function(match, prefix) {
+        const url = match.trim();
+        return `${prefix}<a href="${url}" target="_blank" rel="noopener noreferrer" class="text-blue-600 underline font-semibold hover:text-blue-800 break-all inline-flex items-center gap-1 my-0.5">${url} <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i></a>`;
       });
     }
 
@@ -925,7 +933,7 @@
 
               ${m.Gambar_URL ? `<div class="my-2"><img src="${m.Gambar_URL}" class="max-h-64 rounded-lg border object-contain w-full bg-gray-50"></div>` : ''}
 
-              <div class="text-sm text-gray-700 leading-relaxed">${autoLinkText(m.Konten_Link)}</div>
+              <div class="text-sm text-gray-700 leading-relaxed whitespace-pre-line">${autoLinkText(m.Konten_Link)}</div>
 
               <div class="flex justify-between items-center text-xs text-gray-500 border-t pt-2">
                 <span>Sumber: ${m.Sumber || '-'}</span>
@@ -1421,7 +1429,7 @@
 
               ${m.Gambar_URL ? `<div class="my-2"><img src="${m.Gambar_URL}" class="max-h-80 rounded-lg border object-contain w-full bg-gray-50"></div>` : ''}
               
-              <div class="text-sm text-gray-700 leading-relaxed">${autoLinkText(m.Konten_Link)}</div>
+              <div class="text-sm text-gray-700 leading-relaxed whitespace-pre-line">${autoLinkText(m.Konten_Link)}</div>
 
               <div class="flex justify-between items-center text-xs text-gray-500 border-t pt-3">
                 <span>Sumber: ${m.Sumber || 'Materi Guru'}</span>
@@ -1512,26 +1520,32 @@
 
         activeQuestions = rawQuestions.map(q => {
           const newQ = { ...q };
-          if (newQ.type === 'pg' && cfg.acak_opsi !== false) {
-            const keys = ['a', 'b', 'c', 'd'];
-            const originalKunciKey = (newQ.kunci || 'A').toLowerCase();
-            
-            const originalOptions = keys.map(k => ({
-              key: k,
-              text: newQ[k] || '',
-              img: newQ[k + '_img'] || '',
-              isKey: k === originalKunciKey
-            }));
+          if (cfg.acak_opsi !== false) {
+            if (newQ.type === 'pg') {
+              const keys = ['a', 'b', 'c', 'd'];
+              const originalKunciKey = (newQ.kunci || 'A').toLowerCase();
+              
+              const originalOptions = keys.map(k => ({
+                key: k,
+                text: newQ[k] || '',
+                img: newQ[k + '_img'] || '',
+                isKey: k === originalKunciKey
+              }));
 
-            const shuffledOpts = shuffleArray(originalOptions);
+              const shuffledOpts = shuffleArray(originalOptions);
 
-            keys.forEach((k, idx) => {
-              newQ[k] = shuffledOpts[idx].text;
-              newQ[k + '_img'] = shuffledOpts[idx].img;
-              if (shuffledOpts[idx].isKey) {
-                newQ.kunci = k.toUpperCase();
-              }
-            });
+              keys.forEach((k, idx) => {
+                newQ[k] = shuffledOpts[idx].text;
+                newQ[k + '_img'] = shuffledOpts[idx].img;
+                if (shuffledOpts[idx].isKey) {
+                  newQ.kunci = k.toUpperCase();
+                }
+              });
+            } else if (newQ.type === 'pgk_mcma' && Array.isArray(newQ.options)) {
+              newQ.options = shuffleArray(newQ.options);
+            } else if (newQ.type === 'pgk_kategori' && Array.isArray(newQ.rows)) {
+              newQ.rows = shuffleArray(newQ.rows);
+            }
           }
           return newQ;
         });
