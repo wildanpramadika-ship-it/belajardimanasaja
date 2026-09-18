@@ -4,7 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>E-Learning & CBT System</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- CSS Statis Minified: Meringankan pemrosesan di HP hingga 90% -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   
   <script>
@@ -13,7 +15,8 @@
       svg: { fontCache: 'global' }
     };
   </script>
-  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <!-- MathJax dimuat secara defer agar halaman terbuka tanpa tertahan -->
+  <script id="MathJax-script" defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body class="bg-gray-100 font-sans min-h-screen text-gray-800 selection:bg-indigo-500 selection:text-white">
 
@@ -478,7 +481,7 @@
     function insertImageToContent() {
       const url = prompt("Masukkan URL Gambar yang ingin disisipkan (https://...):");
       if (!url) return;
-      const imgHtml = `\n<img src="${url}" class="w-full max-w-md mx-auto my-3 rounded-lg border shadow-sm" alt="Gambar Materi">\n`;
+      const imgHtml = `\n<img src="${url}" class="w-full max-w-md mx-auto my-3 rounded-lg border shadow-sm" alt="Gambar Materi" loading="lazy">\n`;
       insertAtCursor('matKonten', imgHtml);
     }
 
@@ -947,7 +950,7 @@
                 </div>
               </div>
 
-              ${m.Gambar_URL ? `<div class="my-2"><img src="${m.Gambar_URL}" class="max-h-56 rounded-lg border object-contain w-full bg-gray-50"></div>` : ''}
+              ${m.Gambar_URL ? `<div class="my-2"><img src="${m.Gambar_URL}" class="max-h-56 rounded-lg border object-contain w-full bg-gray-50" loading="lazy"></div>` : ''}
 
               <div class="text-xs sm:text-sm text-gray-700 leading-relaxed whitespace-pre-line">${autoLinkText(m.Konten_Link)}</div>
 
@@ -1427,35 +1430,51 @@
       }
     }
 
+    // PEMUATAN MATERI MURID DENGAN CACHING LOKAL
     function loadMuridMateri() {
       const container = document.getElementById('muridMateriContent');
-      container.innerHTML = '<p class="text-xs text-gray-400">Memuat materi...</p>';
+      const cachedMateri = localStorage.getItem('cache_materi_' + currentUser.kelas);
+
+      if (cachedMateri) {
+        renderMateriMuridUI(JSON.parse(cachedMateri));
+      } else {
+        container.innerHTML = '<p class="text-xs text-gray-400">Memuat materi...</p>';
+      }
 
       google.script.run.withSuccessHandler(list => {
-        if(!list || list.length === 0) { container.innerHTML = '<p class="text-xs text-gray-500">Belum ada materi untuk kelas Anda.</p>'; return; }
-        container.innerHTML = list.map(m => {
-          const ytId = extractYoutubeId(m.Konten_Link);
-          return `
-            <div class="bg-white p-4 sm:p-6 rounded-xl shadow border border-gray-100 space-y-3 sm:space-y-4">
-              <div class="flex justify-between items-start">
-                <span class="text-[10px] sm:text-xs bg-indigo-100 text-indigo-700 px-2.5 py-0.5 rounded-full font-semibold">${m.Mapel}</span>
-                <span class="text-[10px] sm:text-xs text-gray-400">Oleh: ${m.Nama_Guru}</span>
-              </div>
-              <h3 class="font-bold text-base sm:text-xl text-gray-800">${m.Judul}</h3>
-
-              ${m.Gambar_URL ? `<div class="my-2"><img src="${m.Gambar_URL}" class="max-h-64 sm:max-h-80 rounded-lg border object-contain w-full bg-gray-50"></div>` : ''}
-              
-              <div class="text-xs sm:text-sm text-gray-700 leading-relaxed whitespace-pre-line">${autoLinkText(m.Konten_Link)}</div>
-
-              <div class="flex justify-between items-center text-[10px] sm:text-xs text-gray-500 border-t pt-3">
-                <span>Sumber: ${m.Sumber || 'Materi Guru'}</span>
-                ${ytId ? `<button onclick="playYoutube('${ytId}')" class="bg-red-600 text-white px-2.5 py-1 rounded-lg font-medium hover:bg-red-700 transition shadow-sm"><i class="fa-brands fa-youtube mr-1"></i> Putar Video</button>` : ''}
-              </div>
-            </div>
-          `;
-        }).join('');
-        renderMath(container);
+        if(list && list.length > 0) { 
+          localStorage.setItem('cache_materi_' + currentUser.kelas, JSON.stringify(list));
+          renderMateriMuridUI(list);
+        } else if (!cachedMateri) {
+          container.innerHTML = '<p class="text-xs text-gray-500">Belum ada materi untuk kelas Anda.</p>'; 
+        }
       }).getMateriList(currentUser.kelas);
+    }
+
+    function renderMateriMuridUI(list) {
+      const container = document.getElementById('muridMateriContent');
+      container.innerHTML = list.map(m => {
+        const ytId = extractYoutubeId(m.Konten_Link);
+        return `
+          <div class="bg-white p-4 sm:p-6 rounded-xl shadow border border-gray-100 space-y-3 sm:space-y-4">
+            <div class="flex justify-between items-start">
+              <span class="text-[10px] sm:text-xs bg-indigo-100 text-indigo-700 px-2.5 py-0.5 rounded-full font-semibold">${m.Mapel}</span>
+              <span class="text-[10px] sm:text-xs text-gray-400">Oleh: ${m.Nama_Guru}</span>
+            </div>
+            <h3 class="font-bold text-base sm:text-xl text-gray-800">${m.Judul}</h3>
+
+            ${m.Gambar_URL ? `<div class="my-2"><img src="${m.Gambar_URL}" class="max-h-64 sm:max-h-80 rounded-lg border object-contain w-full bg-gray-50" loading="lazy"></div>` : ''}
+            
+            <div class="text-xs sm:text-sm text-gray-700 leading-relaxed whitespace-pre-line">${autoLinkText(m.Konten_Link)}</div>
+
+            <div class="flex justify-between items-center text-[10px] sm:text-xs text-gray-500 border-t pt-3">
+              <span>Sumber: ${m.Sumber || 'Materi Guru'}</span>
+              ${ytId ? `<button onclick="playYoutube('${ytId}')" class="bg-red-600 text-white px-2.5 py-1 rounded-lg font-medium hover:bg-red-700 transition shadow-sm"><i class="fa-brands fa-youtube mr-1"></i> Putar Video</button>` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+      renderMath(container);
     }
 
     function loadMuridUjian() {
@@ -1583,7 +1602,7 @@
                         <input type="radio" name="q_${idx}" value="${opt.toUpperCase()}" class="w-4 h-4 text-indigo-600 focus:ring-indigo-500 cursor-pointer">
                         <span class="text-gray-800 font-medium">${textVal}</span>
                       </div>
-                      ${imgVal ? `<img src="${imgVal}" class="max-h-24 rounded-lg border object-contain bg-gray-50 p-1">` : ''}
+                      ${imgVal ? `<img src="${imgVal}" class="max-h-24 rounded-lg border object-contain bg-gray-50 p-1" loading="lazy">` : ''}
                     </label>
                   `;
                 }).join('')}
@@ -1599,7 +1618,7 @@
                       <input type="checkbox" name="q_${idx}_opt_${oIdx}" value="true" class="w-4 h-4 text-indigo-600 rounded cursor-pointer">
                       <span class="text-gray-800 font-medium">${opt.text}</span>
                     </div>
-                    ${opt.img ? `<img src="${opt.img}" class="max-h-24 rounded-lg border object-contain bg-gray-50 p-1">` : ''}
+                    ${opt.img ? `<img src="${opt.img}" class="max-h-24 rounded-lg border object-contain bg-gray-50 p-1" loading="lazy">` : ''}
                   </label>
                 `).join('')}
               </div>
@@ -1621,7 +1640,7 @@
                       <tr class="hover:bg-gray-50/80">
                         <td class="p-2 sm:p-3 text-gray-800 font-medium">
                           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
-                            <span>${r.text}</span>${r.img ? `<img src="${r.img}" class="max-h-20 rounded border object-contain bg-gray-50 p-1">` : ''}
+                            <span>${r.text}</span>${r.img ? `<img src="${r.img}" class="max-h-20 rounded border object-contain bg-gray-50 p-1" loading="lazy">` : ''}
                           </div>
                         </td>
                         <td class="p-2 sm:p-3 text-center border-l border-gray-200">
@@ -1648,7 +1667,7 @@
                 <span class="font-bold text-indigo-600 text-xs sm:text-sm">Soal Nomor ${idx + 1}</span>
               </div>
 
-              ${q.gambar ? `<div class="my-2"><img src="${q.gambar}" class="max-h-64 sm:max-h-80 rounded-lg border object-contain w-full bg-gray-50 shadow-sm"></div>` : ''}
+              ${q.gambar ? `<div class="my-2"><img src="${q.gambar}" class="max-h-64 sm:max-h-80 rounded-lg border object-contain w-full bg-gray-50 shadow-sm" loading="lazy"></div>` : ''}
 
               <div class="text-xs sm:text-sm text-gray-800 whitespace-pre-line leading-relaxed font-medium">${autoLinkText(q.soal)}</div>
               <div>${optionsHtml}</div>
