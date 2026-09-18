@@ -124,24 +124,25 @@
     <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6">
       
       <!-- ADMIN VIEW -->
-      <div id="adminView" class="hidden space-y-6">
-        <h2 class="text-lg sm:text-xl font-bold text-gray-800">Panel Administrasi User</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="bg-white p-5 rounded-lg shadow">
-            <h3 class="font-semibold text-lg mb-4">Tambah Pengguna Baru</h3>
-            <form onsubmit="handleAddUser(event)" class="space-y-3">
-              <input type="text" id="addUserNama" placeholder="Nama Lengkap" required class="w-full border rounded p-2 text-sm">
-              <input type="text" id="addUserUsername" placeholder="Username" required class="w-full border rounded p-2 text-sm">
-              <input type="password" id="addUserPassword" placeholder="Password" required class="w-full border rounded p-2 text-sm">
-              <select id="addUserRole" required class="w-full border rounded p-2 text-sm">
-                <option value="murid">Murid</option>
-                <option value="guru">Guru</option>
-                <option value="admin">Admin</option>
-              </select>
-              <input type="text" id="addUserKelas" placeholder="Kelas (contoh: 6A / Sesi 1)" required class="w-full border rounded p-2 text-sm">
-              <button type="submit" class="w-full bg-emerald-600 text-white py-2 rounded font-medium hover:bg-emerald-700 text-sm">Simpan User</button>
-            </form>
-          </div>
+      <div class="bg-white p-5 rounded-lg shadow">
+  <h3 class="font-semibold text-lg mb-4">Tambah Pengguna Baru</h3>
+  <form onsubmit="handleAddUser(event)" class="space-y-3">
+    <input type="text" id="addUserNama" placeholder="Nama Lengkap" required class="w-full border rounded p-2 text-sm">
+    <input type="text" id="addUserUsername" placeholder="Username" required class="w-full border rounded p-2 text-sm">
+    <input type="password" id="addUserPassword" placeholder="Password" required class="w-full border rounded p-2 text-sm">
+    <select id="addUserRole" required class="w-full border rounded p-2 text-sm">
+      <option value="murid">Murid</option>
+      <option value="guru">Guru</option>
+      <option value="admin">Admin</option>
+    </select>
+    <input type="text" id="addUserKelas" placeholder="Kelas (contoh: 6A / Sesi 1)" required class="w-full border rounded p-2 text-sm">
+    
+    <!-- TOMBOL SIMPAN YANG HILANG -->
+    <button type="submit" class="w-full bg-emerald-600 text-white py-2 rounded font-medium hover:bg-emerald-700 text-sm shadow">
+      Simpan User
+    </button>
+  </form>
+</div>
           <div class="bg-white p-5 rounded-lg shadow md:col-span-2">
             <h3 class="font-semibold text-lg mb-4">Daftar Pengguna</h3>
             <div class="overflow-x-auto">
