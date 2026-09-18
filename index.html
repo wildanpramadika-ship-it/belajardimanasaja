@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>E-Learning & CBT System</title>
   
-  <!-- CSS Statis Minified: Meringankan pemrosesan di HP hingga 90% -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   
@@ -15,7 +14,6 @@
       svg: { fontCache: 'global' }
     };
   </script>
-  <!-- MathJax dimuat secara defer agar halaman terbuka tanpa tertahan -->
   <script id="MathJax-script" defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body class="bg-gray-100 font-sans min-h-screen text-gray-800 selection:bg-indigo-500 selection:text-white">
@@ -23,48 +21,35 @@
   <script>
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzcbCc8KPp_3j12m5XJULPdUd6UPSBWY2TuLwfwNd092WR-2NSqGezLlV9MvwyFG0U5yA/exec";
 
-    // PROXY DENGAN TIMEOUT 45 DETIK & AUTO RETRY
+    // PROXY CEPAT & TRANSPARAN (TIMEOUT 12 DETIK)
     function createGasProxy(successCb = null, failureCb = null) {
       return new Proxy({}, {
         get(target, prop) {
           if (prop === 'withSuccessHandler') return (fn) => createGasProxy(fn, failureCb);
           if (prop === 'withFailureHandler') return (fn) => createGasProxy(successCb, fn);
           return async function(...args) {
-            const maxRetries = 2;
-            for (let attempt = 1; attempt <= maxRetries; attempt++) {
-              try {
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 45000);
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 12000);
 
-                const res = await fetch(GAS_WEB_APP_URL, {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                  body: JSON.stringify({ action: prop, args: args }),
-                  redirect: 'follow',
-                  signal: controller.signal
-                });
-                clearTimeout(timeoutId);
+            try {
+              const res = await fetch(GAS_WEB_APP_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify({ action: prop, args: args }),
+                redirect: 'follow',
+                signal: controller.signal
+              });
+              clearTimeout(timeoutId);
 
-                const text = await res.text();
-                let json;
-                try {
-                  json = JSON.parse(text);
-                } catch (jsonErr) {
-                  throw new Error("Server Google sedang sibuk. Silakan coba beberapa saat lagi.");
-                }
-                if (successCb) successCb(json);
-                return json;
-              } catch (e) {
-                if (attempt === maxRetries) {
-                  const errorMsg = e.name === 'AbortError' ? "Koneksi ke server timeout. Silakan coba lagi." : e.message;
-                  if (failureCb) failureCb(new Error(errorMsg));
-                  else if (typeof showCustomAlert === 'function') {
-                    showCustomAlert(errorMsg, "Koneksi Terganggu", "warning");
-                  } else {
-                    alert(errorMsg);
-                  }
-                }
-              }
+              const text = await res.text();
+              let json = JSON.parse(text);
+              if (successCb) successCb(json);
+              return json;
+            } catch (e) {
+              clearTimeout(timeoutId);
+              const errorMsg = e.name === 'AbortError' ? "Koneksi lambat. Mengulangi proses..." : e.message;
+              if (failureCb) failureCb(new Error(errorMsg));
+              else showCustomAlert("Gagal terhubung ke server. Silakan coba klik kembali.", "Koneksi Terganggu", "warning");
             }
           };
         }
@@ -84,18 +69,17 @@
       <form id="loginForm" onsubmit="handleLogin(event)" autocomplete="off" class="space-y-4">
         <div>
           <label class="block text-sm font-medium text-gray-700">Username</label>
-          <input type="text" id="loginUser" required class="mt-1 block w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none text-sm sm:text-base">
+          <input type="text" id="loginUser" required class="mt-1 block w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-indigo-500 text-sm sm:text-base">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700">Password</label>
-          <input type="password" id="loginPass" required class="mt-1 block w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none text-sm sm:text-base">
+          <input type="password" id="loginPass" required class="mt-1 block w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-indigo-500 text-sm sm:text-base">
         </div>
         <button type="submit" id="btnLogin" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 rounded-lg transition shadow-md text-sm sm:text-base">
           Masuk
         </button>
       </form>
       <div id="loginAlert" class="mt-4 text-center text-sm font-medium text-red-500 hidden"></div>
-      
       <div class="mt-6 border-t pt-4 text-center text-xs text-gray-400 font-semibold tracking-wide">
         @2026MohamadWildanPramadika
       </div>
@@ -104,7 +88,6 @@
 
   <!-- MAIN APP CONTAINER -->
   <div id="appSection" class="hidden min-h-screen flex flex-col">
-    <!-- NAVBAR -->
     <header class="bg-indigo-700 text-white shadow-md">
       <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
         <div class="flex items-center space-x-2 sm:space-x-3">
@@ -123,7 +106,6 @@
       </div>
     </header>
 
-    <!-- CONTENT WRAPPER -->
     <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6">
       
       <!-- ADMIN VIEW -->
@@ -185,50 +167,50 @@
               <input type="hidden" id="matId">
               <div>
                 <label class="block text-xs font-semibold text-gray-700 mb-1">Judul Materi</label>
-                <input type="text" id="matJudul" placeholder="Judul Materi..." required class="w-full border rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                <input type="text" id="matJudul" placeholder="Judul Materi..." required class="w-full border rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500">
               </div>
               <div class="grid grid-cols-2 gap-3">
                 <div>
                   <label class="block text-xs font-semibold text-gray-700 mb-1">Mata Pelajaran</label>
-                  <input type="text" id="matMapel" placeholder="Matematika / IPAS" required class="w-full border rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500">
+                  <input type="text" id="matMapel" placeholder="Matematika / IPAS" required class="w-full border rounded-lg p-2.5 text-sm">
                 </div>
                 <div>
                   <label class="block text-xs font-semibold text-gray-700 mb-1">Target Kelas</label>
-                  <input type="text" id="matKelas" placeholder="6A / Semua" required class="w-full border rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500">
+                  <input type="text" id="matKelas" placeholder="6A / Semua" required class="w-full border rounded-lg p-2.5 text-sm">
                 </div>
               </div>
 
               <div>
                 <label class="block text-xs font-semibold text-gray-700 mb-1">Isi Penjelasan Materi & Link Video</label>
                 <div class="flex flex-wrap gap-1.5 mb-1.5 p-1 bg-gray-50 border rounded-lg">
-                  <button type="button" onclick="applyTextFormat('b')" class="px-2 py-1 bg-white border rounded font-bold text-xs text-gray-700"><i class="fa-solid fa-bold"></i></button>
-                  <button type="button" onclick="applyTextFormat('i')" class="px-2 py-1 bg-white border rounded italic text-xs text-gray-700"><i class="fa-solid fa-italic"></i></button>
-                  <button type="button" onclick="applyTextFormat('u')" class="px-2 py-1 bg-white border rounded underline text-xs text-gray-700"><i class="fa-solid fa-underline"></i></button>
+                  <button type="button" onclick="applyTextFormat('b')" class="px-2 py-1 bg-white border rounded font-bold text-xs"><i class="fa-solid fa-bold"></i></button>
+                  <button type="button" onclick="applyTextFormat('i')" class="px-2 py-1 bg-white border rounded italic text-xs"><i class="fa-solid fa-italic"></i></button>
+                  <button type="button" onclick="applyTextFormat('u')" class="px-2 py-1 bg-white border rounded underline text-xs"><i class="fa-solid fa-underline"></i></button>
                   <span class="border-r my-1"></span>
-                  <button type="button" onclick="insertImageToContent()" class="px-2 py-1 bg-white border rounded text-xs text-gray-700 font-semibold"><i class="fa-solid fa-image text-emerald-600"></i> Gambar</button>
-                  <button type="button" onclick="insertTableToContent()" class="px-2 py-1 bg-white border rounded text-xs text-gray-700 font-semibold"><i class="fa-solid fa-table text-blue-600"></i> Tabel</button>
-                  <button type="button" onclick="insertMathTemplate()" class="px-2 py-1 bg-white border rounded text-xs text-gray-700 font-semibold"><i class="fa-solid fa-square-root-variable text-purple-600"></i> Pecahan</button>
+                  <button type="button" onclick="insertImageToContent()" class="px-2 py-1 bg-white border rounded text-xs font-semibold"><i class="fa-solid fa-image text-emerald-600"></i> Gambar</button>
+                  <button type="button" onclick="insertTableToContent()" class="px-2 py-1 bg-white border rounded text-xs font-semibold"><i class="fa-solid fa-table text-blue-600"></i> Tabel</button>
+                  <button type="button" onclick="insertMathTemplate()" class="px-2 py-1 bg-white border rounded text-xs font-semibold"><i class="fa-solid fa-square-root-variable text-purple-600"></i> Pecahan</button>
                 </div>
 
-                <textarea id="matKonten" placeholder="Tuliskan penjelasan materi di sini..." rows="10" required class="w-full border rounded-lg p-3 text-sm focus:ring-2 focus:ring-indigo-500 leading-relaxed"></textarea>
+                <textarea id="matKonten" placeholder="Tuliskan penjelasan materi di sini..." rows="10" required class="w-full border rounded-lg p-3 text-sm leading-relaxed"></textarea>
               </div>
 
               <div>
-                <label class="block text-xs font-semibold text-gray-700 mb-1">Gambar Utama Materi (Header Banner)</label>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">Gambar Utama Materi</label>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   <input type="file" id="matGambarFile" accept="image/*" onchange="previewMatImage(this)" class="border rounded-lg p-1 text-xs bg-white">
-                  <input type="url" id="matGambar" placeholder="Atau tempel URL Gambar (https://...)" class="w-full border rounded-lg p-2 text-xs focus:ring-2 focus:ring-indigo-500">
+                  <input type="url" id="matGambar" placeholder="Atau tempel URL Gambar" class="w-full border rounded-lg p-2 text-xs">
                 </div>
                 <img id="matGambarPreview" src="" class="hidden max-h-40 rounded-lg border object-contain bg-white p-1 mt-2">
               </div>
 
               <div>
                 <label class="block text-xs font-semibold text-gray-700 mb-1">Sumber Rujukan Materi</label>
-                <input type="text" id="matSumber" placeholder="Buku Siswa Kemendikbudristek Halaman 45" class="w-full border rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500">
+                <input type="text" id="matSumber" placeholder="Buku Siswa Kemendikbudristek" class="w-full border rounded-lg p-2.5 text-sm">
               </div>
               
               <div class="flex space-x-2 pt-2">
-                <button type="submit" id="btnSubmitMateri" class="flex-1 bg-indigo-600 text-white py-2.5 rounded-lg font-semibold hover:bg-indigo-700 transition shadow text-sm">Simpan Materi</button>
+                <button type="submit" id="btnSubmitMateri" class="flex-1 bg-indigo-600 text-white py-2.5 rounded-lg font-semibold hover:bg-indigo-700 transition shadow text-sm">Simpan Perubahan Materi</button>
                 <button type="button" onclick="resetMateriForm()" class="bg-gray-200 text-gray-700 px-4 rounded-lg text-sm hover:bg-gray-300 font-medium">Batal</button>
               </div>
             </form>
@@ -250,7 +232,7 @@
               <input type="hidden" id="examId">
               <div>
                 <label class="block text-xs font-semibold text-gray-700 mb-1">Judul Ujian / Assessment</label>
-                <input type="text" id="examJudul" placeholder="Sumatif Akhir Bab 1..." required class="w-full border rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500">
+                <input type="text" id="examJudul" placeholder="Sumatif Akhir Bab 1..." required class="w-full border rounded-lg p-2.5 text-sm">
               </div>
 
               <div class="grid grid-cols-3 gap-2 sm:gap-3">
@@ -273,7 +255,7 @@
                 <div class="grid grid-cols-2 gap-3">
                   <div>
                     <label class="block text-[11px] font-semibold text-gray-700 mb-1">Sesi Peserta Ujian</label>
-                    <input type="text" id="examSesi" placeholder="Semua / Sesi 1 / Sesi 2" value="Semua" required class="w-full border rounded p-2 text-xs">
+                    <input type="text" id="examSesi" placeholder="Semua / Sesi 1" value="Semua" required class="w-full border rounded p-2 text-xs">
                   </div>
                   <div>
                     <label class="block text-[11px] font-semibold text-gray-700 mb-1">Batas Percobaan</label>
@@ -307,9 +289,12 @@
                 <div id="soalContainer" class="space-y-4 max-h-[60vh] overflow-y-auto pr-1"></div>
               </div>
 
+              <!-- TOMBOL PERUBAHAN & EDIT -->
               <div class="flex space-x-2 pt-2">
-                <button type="submit" id="btnSubmitUjian" class="flex-1 bg-indigo-600 text-white py-2.5 rounded-lg font-bold hover:bg-indigo-700 transition shadow-md text-sm">Terbitkan Ujian CBT</button>
-                <button type="button" id="btnCancelUjian" onclick="resetUjianForm()" class="hidden bg-gray-200 text-gray-700 px-4 rounded-lg text-sm hover:bg-gray-300 font-medium">Batal</button>
+                <button type="submit" id="btnSubmitUjian" class="flex-1 bg-emerald-600 text-white py-2.5 rounded-lg font-bold hover:bg-emerald-700 transition shadow-md text-sm">
+                  Simpan Perubahan Ujian
+                </button>
+                <button type="button" id="btnCancelUjian" onclick="resetUjianForm()" class="bg-gray-200 text-gray-700 px-4 rounded-lg text-sm hover:bg-gray-300 font-medium">Batal</button>
               </div>
             </form>
           </div>
@@ -358,12 +343,11 @@
           <div id="ujianAvailableList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-5"></div>
         </div>
 
-        <div id="cbtExamArea" class="hidden bg-white p-4 sm:p-6 rounded-xl shadow border border-indigo-100 relative">
-          <div id="cheatWarningBanner" class="hidden mb-4 p-3 bg-red-100 border border-red-400 text-red-700 text-xs sm:text-sm rounded-lg flex justify-between items-center">
-            <span><i class="fa-solid fa-triangle-exclamation mr-1.5"></i> Terdeteksi meninggalkan halaman: <strong id="cheatCountText">0</strong> kali.</span>
-          </div>
-
-          <div class="flex justify-between items-center border-b pb-3 mb-4">
+        <!-- AREA UJIAN CBT DENGAN FOOTER STICKY (MEMASTIKAN TOMBOL KIRIM JAWABAN TIDAK HILANG) -->
+        <div id="cbtExamArea" class="hidden bg-white rounded-xl shadow border border-indigo-100 flex flex-col h-[85vh] relative">
+          
+          <!-- HEADER UJIAN -->
+          <div class="p-4 border-b bg-white rounded-t-xl flex justify-between items-center z-10">
             <div>
               <h3 id="cbtTitle" class="text-base sm:text-xl font-bold text-gray-800"></h3>
               <p id="cbtSub" class="text-xs sm:text-sm text-gray-500"></p>
@@ -373,13 +357,19 @@
               <span id="cbtTimer" class="text-lg sm:text-2xl font-mono font-bold text-red-600">00:00</span>
             </div>
           </div>
+
+          <div id="cheatWarningBanner" class="hidden p-3 bg-red-100 border-b border-red-400 text-red-700 text-xs sm:text-sm flex justify-between items-center">
+            <span><i class="fa-solid fa-triangle-exclamation mr-1.5"></i> Terdeteksi meninggalkan halaman: <strong id="cheatCountText">0</strong> kali.</span>
+          </div>
+
+          <!-- DAFTAR SOAL -->
+          <div id="cbtQuestionsContainer" class="flex-1 p-4 sm:p-6 overflow-y-auto space-y-6"></div>
           
-          <div id="cbtQuestionsContainer" class="space-y-6 max-h-[68vh] overflow-y-auto pr-1"></div>
-          
-          <div class="mt-6 border-t pt-4 flex justify-between items-center">
-            <span class="text-[10px] sm:text-xs text-gray-400"><i class="fa-solid fa-shield-halved text-indigo-500 mr-1"></i> Mode Ujian</span>
-            <button onclick="submitExam(false)" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg shadow text-xs sm:text-base">
-              Kirim Jawaban <i class="fa-solid fa-paper-plane ml-1"></i>
+          <!-- FOOTER TOMBOL KIRIM JAWABAN STICKY DI BAWAH HP -->
+          <div class="p-3 sm:p-4 bg-gray-50 border-t rounded-b-xl flex justify-between items-center sticky bottom-0 z-20 shadow-lg">
+            <span class="text-[10px] sm:text-xs text-gray-500 font-semibold"><i class="fa-solid fa-shield-halved text-indigo-500 mr-1"></i> Mode Ujian Aktif</span>
+            <button onclick="submitExam(false)" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-5 py-2.5 rounded-lg shadow-md transition text-xs sm:text-sm flex items-center gap-1.5">
+              <span>Kirim Jawaban</span> <i class="fa-solid fa-paper-plane"></i>
             </button>
           </div>
         </div>
@@ -872,7 +862,7 @@
       };
 
       google.script.run.withSuccessHandler(async res => {
-        btn.innerText = 'Simpan Materi';
+        btn.innerText = 'Simpan Perubahan Materi';
         btn.disabled = false;
         await showCustomAlert(res.message, res.success ? "Berhasil" : "Gagal", res.success ? "success" : "error");
         if(res.success) {
@@ -945,7 +935,7 @@
                   <p class="text-[11px] sm:text-xs text-gray-500">${m.Mapel} • Target: Kelas ${m.Kelas} • Oleh ${m.Nama_Guru}</p>
                 </div>
                 <div class="space-x-1 whitespace-nowrap">
-                  <button onclick="editMateri('${encodedMateri}')" class="text-indigo-600 hover:text-indigo-800 text-xs font-semibold px-2 py-1 rounded bg-indigo-50"><i class="fa-solid fa-pen"></i></button>
+                  <button onclick="editMateri('${encodedMateri}')" class="text-indigo-600 hover:text-indigo-800 text-xs font-semibold px-2 py-1 rounded bg-indigo-50"><i class="fa-solid fa-pen"></i> Edit</button>
                   <button onclick="deleteMateri('${m.ID}')" class="text-red-600 hover:text-red-800 text-xs font-semibold px-2 py-1 rounded bg-red-50"><i class="fa-solid fa-trash"></i></button>
                 </div>
               </div>
@@ -988,14 +978,14 @@
 
         <div>
           <label class="block text-xs font-semibold text-gray-700 mb-1">Teks Pertanyaan / Rumus Math ($ \\frac{1}{2} $)</label>
-          <textarea class="q-text w-full border rounded-lg p-2.5 text-xs focus:ring-2 focus:ring-indigo-500 leading-relaxed" placeholder="Tuliskan pertanyaan di sini..." rows="3" required></textarea>
+          <textarea class="q-text w-full border rounded-lg p-2.5 text-xs leading-relaxed" placeholder="Tuliskan pertanyaan di sini..." rows="3" required></textarea>
         </div>
 
         <div>
           <label class="block text-xs font-semibold text-gray-700 mb-1">Gambar Soal (Upload / URL)</label>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <input type="file" accept="image/*" onchange="previewQuestionImage(this, ${index})" class="q-img-file border rounded-lg p-1 text-xs bg-white">
-            <input type="url" class="q-img-url border rounded-lg p-2 text-xs focus:ring-2 focus:ring-indigo-500" placeholder="Atau paste URL Gambar">
+            <input type="url" class="q-img-url border rounded-lg p-2 text-xs" placeholder="Atau paste URL Gambar">
           </div>
           <img id="q_img_preview_${index}" src="" class="hidden max-h-36 rounded-lg border object-contain bg-white p-1 mt-2 shadow-sm">
         </div>
@@ -1040,7 +1030,7 @@
           <div class="space-y-2">
             <label class="text-xs font-semibold text-gray-700 block">Daftar Opsi Centang:</label>
             <div id="mcma_options_${index}" class="space-y-2"></div>
-            <button type="button" onclick="addMcmaOption(${index})" class="text-xs bg-indigo-50 text-indigo-700 border border-indigo-300 px-3 py-1.5 rounded-lg hover:bg-indigo-100 font-medium">
+            <button type="button" onclick="addMcmaOption(${index})" class="text-xs bg-indigo-50 text-indigo-700 border border-indigo-300 px-3 py-1.5 rounded-lg font-medium">
               <i class="fa-solid fa-plus mr-1"></i> Tambah Opsi Centang
             </button>
           </div>
@@ -1063,7 +1053,7 @@
 
             <label class="text-xs font-semibold text-gray-700 block">Daftar Baris Pernyataan:</label>
             <div id="kat_rows_${index}" class="space-y-2"></div>
-            <button type="button" onclick="addKatRow(${index})" class="text-xs bg-blue-50 text-blue-700 border border-blue-300 px-3 py-1.5 rounded-lg hover:bg-blue-100 font-medium">
+            <button type="button" onclick="addKatRow(${index})" class="text-xs bg-blue-50 text-blue-700 border border-blue-300 px-3 py-1.5 rounded-lg font-medium">
               <i class="fa-solid fa-plus mr-1"></i> Tambah Baris Pernyataan
             </button>
           </div>
@@ -1209,7 +1199,7 @@
       };
 
       google.script.run.withSuccessHandler(async res => {
-        btn.innerText = document.getElementById('examId').value ? 'Simpan Perubahan Ujian' : 'Terbitkan Ujian CBT';
+        btn.innerText = 'Simpan Perubahan Ujian';
         btn.disabled = false;
         await showCustomAlert(res.message, res.success ? "Berhasil" : "Gagal", res.success ? "success" : "error");
         if(res.success) {
@@ -1243,7 +1233,6 @@
       
       document.getElementById('formUjianTitle').innerHTML = '<i class="fa-solid fa-file-pen mr-2"></i> Edit Ujian CBT';
       document.getElementById('btnSubmitUjian').innerText = 'Simpan Perubahan Ujian';
-      document.getElementById('btnCancelUjian').classList.remove('hidden');
 
       const soalContainer = document.getElementById('soalContainer');
       soalContainer.innerHTML = '';
@@ -1310,8 +1299,7 @@
       document.getElementById('examAcakSoal').checked = true;
       document.getElementById('examAcakOpsi').checked = true;
       document.getElementById('formUjianTitle').innerHTML = '<i class="fa-solid fa-file-pen mr-2"></i> Pengaturan Ujian CBT';
-      document.getElementById('btnSubmitUjian').innerText = 'Terbitkan Ujian CBT';
-      document.getElementById('btnCancelUjian').classList.add('hidden');
+      document.getElementById('btnSubmitUjian').innerText = 'Simpan Perubahan Ujian';
       document.getElementById('soalContainer').innerHTML = '';
       addQuestionField();
     }
@@ -1340,8 +1328,8 @@
                 <p class="text-[11px] text-gray-500">${u.Mapel} • Kelas ${u.Kelas} (${sesiText}) • ${u.Durasi_Menit} Mnt</p>
               </div>
               <div class="flex items-center space-x-1.5">
-                <button onclick="editUjian('${encodedExam}')" class="text-indigo-600 hover:text-indigo-800 text-xs font-semibold px-2 py-1 rounded bg-indigo-50">
-                  <i class="fa-solid fa-pen"></i>
+                <button onclick="editUjian('${encodedExam}')" class="text-indigo-600 hover:text-indigo-800 text-xs font-semibold px-2.5 py-1 rounded bg-indigo-50 border border-indigo-200">
+                  <i class="fa-solid fa-pen mr-1"></i> Edit
                 </button>
                 <button onclick="toggleExamStatus('${u.ID}', '${u.Status === 'Aktif' ? 'Non-Aktif' : 'Aktif'}')" class="text-[10px] sm:text-xs px-2.5 py-1 rounded-full font-semibold transition ${u.Status === 'Aktif' ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-700'}">
                   ${u.Status || 'Aktif'}
@@ -1430,7 +1418,6 @@
       }
     }
 
-    // PEMUATAN MATERI MURID DENGAN CACHING LOKAL
     function loadMuridMateri() {
       const container = document.getElementById('muridMateriContent');
       const cachedMateri = localStorage.getItem('cache_materi_' + currentUser.kelas);
@@ -1462,11 +1449,8 @@
               <span class="text-[10px] sm:text-xs text-gray-400">Oleh: ${m.Nama_Guru}</span>
             </div>
             <h3 class="font-bold text-base sm:text-xl text-gray-800">${m.Judul}</h3>
-
             ${m.Gambar_URL ? `<div class="my-2"><img src="${m.Gambar_URL}" class="max-h-64 sm:max-h-80 rounded-lg border object-contain w-full bg-gray-50" loading="lazy"></div>` : ''}
-            
             <div class="text-xs sm:text-sm text-gray-700 leading-relaxed whitespace-pre-line">${autoLinkText(m.Konten_Link)}</div>
-
             <div class="flex justify-between items-center text-[10px] sm:text-xs text-gray-500 border-t pt-3">
               <span>Sumber: ${m.Sumber || 'Materi Guru'}</span>
               ${ytId ? `<button onclick="playYoutube('${ytId}')" class="bg-red-600 text-white px-2.5 py-1 rounded-lg font-medium hover:bg-red-700 transition shadow-sm"><i class="fa-brands fa-youtube mr-1"></i> Putar Video</button>` : ''}
@@ -1477,7 +1461,6 @@
       renderMath(container);
     }
 
-    // PEMUATAN DAFTAR UJIAN DALAM 1 REQUEST RINGAN
     function loadMuridUjian() {
       const container = document.getElementById('ujianAvailableList');
       container.innerHTML = '<p class="text-xs text-gray-400">Memuat daftar ujian...</p>';
@@ -1533,7 +1516,6 @@
       }).getDashboardMuridData(currentUser.kelas, currentUser.nama);
     }
 
-    // PEMUATAN DETAIL SOAL SECARA LAZY-LOADING
     function startExam(examId) {
       showCustomAlert("Menyiapkan lembar soal ujian...", "Mohon Tunggu", "info");
 
@@ -1570,20 +1552,14 @@
             const originalKunciKey = (newQ.kunci || 'A').trim().toLowerCase();
             
             const originalOptions = keys.map(k => ({
-              key: k,
-              text: newQ[k] || '',
-              img: newQ[k + '_img'] || '',
-              isKey: k === originalKunciKey
+              key: k, text: newQ[k] || '', img: newQ[k + '_img'] || '', isKey: k === originalKunciKey
             }));
 
             const shuffledOpts = shuffleArray(originalOptions);
-
             keys.forEach((k, idx) => {
               newQ[k] = shuffledOpts[idx].text;
               newQ[k + '_img'] = shuffledOpts[idx].img;
-              if (shuffledOpts[idx].isKey) {
-                newQ.kunci = k.toUpperCase();
-              }
+              if (shuffledOpts[idx].isKey) newQ.kunci = k.toUpperCase();
             });
           }
           return newQ;
@@ -1609,7 +1585,7 @@
                   return `
                     <label class="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-2 sm:space-y-0 text-xs sm:text-sm cursor-pointer hover:bg-gray-50 p-2.5 sm:p-3 rounded-xl border border-gray-200 transition bg-white shadow-sm">
                       <div class="flex items-center space-x-2.5">
-                        <input type="radio" name="q_${idx}" value="${opt.toUpperCase()}" class="w-4 h-4 text-indigo-600 focus:ring-indigo-500 cursor-pointer">
+                        <input type="radio" name="q_${idx}" value="${opt.toUpperCase()}" class="w-4 h-4 text-indigo-600 cursor-pointer">
                         <span class="text-gray-800 font-medium">${textVal}</span>
                       </div>
                       ${imgVal ? `<img src="${imgVal}" class="max-h-24 rounded-lg border object-contain bg-gray-50 p-1" loading="lazy">` : ''}
@@ -1676,9 +1652,7 @@
               <div class="flex items-center justify-between">
                 <span class="font-bold text-indigo-600 text-xs sm:text-sm">Soal Nomor ${idx + 1}</span>
               </div>
-
               ${q.gambar ? `<div class="my-2"><img src="${q.gambar}" class="max-h-64 sm:max-h-80 rounded-lg border object-contain w-full bg-gray-50 shadow-sm" loading="lazy"></div>` : ''}
-
               <div class="text-xs sm:text-sm text-gray-800 whitespace-pre-line leading-relaxed font-medium">${autoLinkText(q.soal)}</div>
               <div>${optionsHtml}</div>
             </div>
