@@ -19,7 +19,7 @@
   <script>
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzcbCc8KPp_3j12m5XJULPdUd6UPSBWY2TuLwfwNd092WR-2NSqGezLlV9MvwyFG0U5yA/exec";
 
-    // PROXY SAFELY HANDLING RETRIES, TIMEOUTS, AND NON-JSON RESPONSES
+    // PROXY SAFELY HANDLING RETRIES, TIMEOUTS (45s), AND NON-JSON RESPONSES
     function createGasProxy(successCb = null, failureCb = null) {
       return new Proxy({}, {
         get(target, prop) {
@@ -30,7 +30,8 @@
             for (let attempt = 1; attempt <= maxRetries; attempt++) {
               try {
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 15000);
+                // Timeout dinaikkan ke 45 detik untuk menangani cold-start Apps Script
+                const timeoutId = setTimeout(() => controller.abort(), 45000);
 
                 const res = await fetch(GAS_WEB_APP_URL, {
                   method: 'POST',
@@ -46,7 +47,7 @@
                 try {
                   json = JSON.parse(text);
                 } catch (jsonErr) {
-                  throw new Error("Server Google sedang sibuk. Silakan klik tombol sekali lagi.");
+                  throw new Error("Server Google sedang sibuk. Silakan coba beberapa saat lagi.");
                 }
                 if (successCb) successCb(json);
                 return json;
@@ -511,13 +512,18 @@
       insertAtCursor('matKonten', fracHtml);
     }
 
-    function renderMath() {
+    // PENINGKATAN PERFORMA MATHJAX
+    function renderMath(targetElem = null) {
       if (window.MathJax && typeof window.MathJax.typesetPromise === 'function') {
-        window.MathJax.typesetPromise().catch(err => console.log('MathJax error ignored:', err));
+        if (targetElem) {
+          window.MathJax.typesetPromise([targetElem]).catch(() => {});
+        } else {
+          window.MathJax.typesetPromise().catch(() => {});
+        }
       }
     }
 
-    function compressAndReadImage(file, maxDim = 450, quality = 0.5) {
+    function compressAndReadImage(file, maxDim = 400, quality = 0.5) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -952,7 +958,7 @@
             </div>
           `;
         }).join('');
-        renderMath();
+        renderMath(container);
       }).getMateriList('ALL');
     }
 
@@ -1151,7 +1157,7 @@
           qObj.c_img = getOptImg(block, '.q-c-img-file');
           qObj.d = block.querySelector('.q-d').value || '';
           qObj.d_img = getOptImg(block, '.q-d-img-file');
-          qObj.kunci = block.querySelector('.q-key').value;
+          qObj.kunci = (block.querySelector('.q-key').value || 'A').trim().toUpperCase();
         } else if(type === 'pgk_mcma') {
           const optTexts = block.querySelectorAll('.mcma-text');
           const optKeys = block.querySelectorAll('.mcma-key');
@@ -1160,7 +1166,7 @@
 
           optTexts.forEach((node, i) => {
             const imgData = (optImgFiles[i] && optImgFiles[i].dataset && optImgFiles[i].dataset.base64) ? optImgFiles[i].dataset.base64 : '';
-            qObj.options.push({ text: node.value, img: imgData, isKey: optKeys[i].checked });
+            qObj.options.push({ text: node.value, img: imgData, isKey: Boolean(optKeys[i].checked) });
           });
         } else if(type === 'pgk_kategori') {
           qObj.col1 = block.querySelector('.q-col1').value;
@@ -1172,7 +1178,7 @@
           qObj.rows = [];
           rTexts.forEach((node, i) => {
             const imgData = (rImgFiles[i] && rImgFiles[i].dataset && rImgFiles[i].dataset.base64) ? rImgFiles[i].dataset.base64 : '';
-            qObj.rows.push({ text: node.value, img: imgData, key: rKeys[i].value });
+            qObj.rows.push({ text: node.value, img: imgData, key: (rKeys[i].value || 'col1').trim() });
           });
         }
 
@@ -1262,7 +1268,7 @@
           block.querySelector('.q-b').value = q.b || '';
           block.querySelector('.q-c').value = q.c || '';
           block.querySelector('.q-d').value = q.d || '';
-          block.querySelector('.q-key').value = q.kunci || 'A';
+          block.querySelector('.q-key').value = (q.kunci || 'A').trim().toUpperCase();
         } else if (q.type === 'pgk_mcma') {
           const mcmaContainer = document.getElementById(`mcma_options_${idx}`);
           mcmaContainer.innerHTML = '';
@@ -1270,7 +1276,7 @@
             addMcmaOption(idx);
             const lastOpt = mcmaContainer.lastElementChild;
             lastOpt.querySelector('.mcma-text').value = opt.text || '';
-            lastOpt.querySelector('.mcma-key').checked = !!opt.isKey;
+            lastOpt.querySelector('.mcma-key').checked = (opt.isKey === true || String(opt.isKey) === 'true');
           });
         } else if (q.type === 'pgk_kategori') {
           block.querySelector('.q-col1').value = q.col1 || 'Sebelum';
@@ -1448,7 +1454,7 @@
             </div>
           `;
         }).join('');
-        renderMath();
+        renderMath(container);
       }).getMateriList(currentUser.kelas);
     }
 
@@ -1528,12 +1534,12 @@
           rawQuestions = shuffleArray(rawQuestions);
         }
 
-        // HANYA ACAK OPSI UNTUK PILIHAN GANDA (PG). MCMA DAN KATEGORI TIDAK DIACAK
+        // ACAK OPSI HANYA UNTUK PILIHAN GANDA (PG)
         activeQuestions = rawQuestions.map(q => {
           const newQ = JSON.parse(JSON.stringify(q));
           if (cfg.acak_opsi !== false && newQ.type === 'pg') {
             const keys = ['a', 'b', 'c', 'd'];
-            const originalKunciKey = (newQ.kunci || 'A').toLowerCase();
+            const originalKunciKey = (newQ.kunci || 'A').trim().toLowerCase();
             
             const originalOptions = keys.map(k => ({
               key: k,
@@ -1652,7 +1658,7 @@
           `;
         }).join('');
 
-        renderMath();
+        renderMath(qContainer);
         startTimer(parseInt(exam.Durasi_Menit) * 60);
 
       }).getUjianList(currentUser.kelas, 'murid');
@@ -1694,6 +1700,7 @@
       }, 1000);
     }
 
+    // PERBAIKAN LOGIKA PENILAIAN (SKOR FIX)
     function submitExam(isAutoSubmit) {
       if(timerInterval) clearInterval(timerInterval);
       isExamRunning = false;
@@ -1707,19 +1714,22 @@
 
         if(q.type === 'pg') {
           const selected = document.querySelector(`input[name="q_${idx}"]:checked`);
-          if(selected && selected.value === q.kunci) {
+          const kunciAnswer = (q.kunci || '').toString().trim().toUpperCase();
+          if(selected && selected.value.toString().trim().toUpperCase() === kunciAnswer) {
             totalEarnedPoints += weight;
           }
         } else if(q.type === 'pgk_mcma') {
           const options = q.options || [];
-          let totalKeys = options.filter(o => o.isKey).length;
+          // Evaluasi status isKey (support boolean maupun string "true")
+          const checkIsKey = (opt) => opt.isKey === true || String(opt.isKey).toLowerCase() === 'true';
+          let totalKeys = options.filter(o => checkIsKey(o)).length;
           let correctSelected = 0;
           let wrongSelected = 0;
 
           options.forEach((opt, oIdx) => {
             const checkedNode = document.querySelector(`input[name="q_${idx}_opt_${oIdx}"]:checked`);
             if(checkedNode) {
-              if(opt.isKey) correctSelected++;
+              if(checkIsKey(opt)) correctSelected++;
               else wrongSelected++;
             }
           });
@@ -1734,7 +1744,10 @@
             let rowScore = 0;
             rows.forEach((r, rIdx) => {
               const selected = document.querySelector(`input[name="q_${idx}_row_${rIdx}"]:checked`);
-              if(selected && selected.value === r.key) rowScore++;
+              const kunciRow = (r.key || 'col1').toString().trim().toLowerCase();
+              if(selected && selected.value.toString().trim().toLowerCase() === kunciRow) {
+                rowScore++;
+              }
             });
             totalEarnedPoints += ((rowScore / rows.length) * weight);
           }
